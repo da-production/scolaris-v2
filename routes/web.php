@@ -1,6 +1,8 @@
 <?php
 
 use App\Livewire\ClassificationWire;
+use App\Livewire\CreateExerciseWire;
+use App\Livewire\ExerciceWire;
 use App\Livewire\InscriptionOptionWire;
 use App\Livewire\ScolarisOptionWire;
 use App\Livewire\Settings\Appearance;
@@ -38,6 +40,8 @@ Route::prefix('administrateur')
         Route::get('/inscription', InscriptionOptionWire::class)->name('inscription');
         Route::get('/classifications', ClassificationWire::class)->name('classifications');
         Route::get('/specialites', SpecialiteWire::class)->name('specialites');
+        Route::get('/exercices', ExerciceWire::class)->name('exercices');
+        Route::get('/exercices/create', CreateExerciseWire::class)->name('exercices.create');
     });
 
 });

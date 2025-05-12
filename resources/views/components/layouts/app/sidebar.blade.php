@@ -23,9 +23,11 @@
 
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Settings')" class="grid">
-                    <flux:navlist.item icon="users" href="{{ route('administrateur.options.index') }}">
-                    {{ __('Options') }}
-                    </flux:navlist.item>
+                    @hasAnyOf(['root', 'administrator'],['view options'])
+                        <flux:navlist.item icon="users" href="{{ route('administrateur.options.index') }}">
+                            {{ __('Options') }}
+                        </flux:navlist.item>
+                    @endhasAnyOf
                     <flux:navlist.item icon="users" href="{{ route('administrateur.utilisateurs.index') }}">
                     {{ __('UAC & RBAC') }}
                     </flux:navlist.item>

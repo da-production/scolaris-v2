@@ -33,6 +33,12 @@
                         <span>{{ __('Spécialité') }}</span>
                     </div>
                 </flux:navlist.item>
+                <flux:navlist.item :href="route('administrateur.options.exercices')" wire:navigate>
+                    <div class="flex gap-2 items-center">
+                        <x-icons.roles class="size-4" />
+                        <span>{{ __('Exercices') }}</span>
+                    </div>
+                </flux:navlist.item>
             </flux:navlist>
         </div>
 

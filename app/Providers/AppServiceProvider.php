@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 
@@ -28,5 +29,13 @@ class AppServiceProvider extends ServiceProvider
 
             return "<?php echo isset($var) && !is_null($var) ? $var : $default; ?>";
         });
+
+        Blade::if('hasAnyOf', function ($roles = [], $permissions = []) {
+        $user = Auth::user();
+
+        if (!$user) return false;
+
+        return $user->hasAnyRole($roles) || $user->hasAnyPermission($permissions);
+    });
     }
 }

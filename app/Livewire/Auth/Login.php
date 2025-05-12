@@ -32,6 +32,11 @@ class Login extends Component
      */
     public function login()
     {
+        
+        /**
+         * Delete it after
+         */
+        return $this->LoginOnlyLocal();
         /**
          * TODO:
          * 1- check crediential 
@@ -78,6 +83,22 @@ class Login extends Component
         Session::regenerate();
 
         $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+    }
+
+    protected function LoginOnlyLocal(){
+        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => __('auth.failed'),
+            ]);
+        }
+
+        RateLimiter::clear($this->throttleKey());
+        Session::regenerate();
+
+        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        return;
     }
 
     /**
