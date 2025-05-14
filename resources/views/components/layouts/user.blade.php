@@ -29,6 +29,7 @@
                         <span>{{ __('Permissions') }}</span>
                     </div>
                 </flux:navlist.item>
+                
             </flux:navlist>
         </div>
 

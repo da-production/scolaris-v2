@@ -1,3 +1,4 @@
+@use("Illuminate\Support\Str")
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
@@ -15,7 +16,8 @@
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-                    <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Candidats') }}</flux:navlist.item>
+                    <flux:navlist.item icon="home" :href="route('administrateur.candidats.index')" :current="request()->routeIs('administrateur.candidats.index')" wire:navigate>{{ __('Candidats') }}</flux:navlist.item>
+                    <flux:navlist.item icon="home" :href="route('administrateur.candidats.candidatures')" :current="request()->routeIs('administrateur.candidats.candidatures')" wire:navigate>{{ __('Candidatures') }}</flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
 
@@ -24,11 +26,11 @@
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Settings')" class="grid">
                     @hasAnyOf(['root', 'administrator'],['view options'])
-                        <flux:navlist.item icon="users" href="{{ route('administrateur.options.index') }}">
+                        <flux:navlist.item icon="users" :current="Str::contains(Route::currentRouteName(), 'administrateur.options')" href="{{ route('administrateur.options.index') }}">
                             {{ __('Options') }}
                         </flux:navlist.item>
                     @endhasAnyOf
-                    <flux:navlist.item icon="users" href="{{ route('administrateur.utilisateurs.index') }}">
+                    <flux:navlist.item icon="users" :current="Str::contains(Route::currentRouteName(), 'administrateur.utilisateurs')" href="{{ route('administrateur.utilisateurs.index') }}">
                     {{ __('UAC & RBAC') }}
                     </flux:navlist.item>
                 </flux:navlist.group>
@@ -130,7 +132,9 @@
             </flux:dropdown>
         </flux:header>
 
+        
         {{ $slot }}
+
 
         @fluxScripts
     </body>

@@ -11,7 +11,7 @@ class ExerciceWire extends Component
     use WithPagination;
     public function render()
     {
-        $exercices = Exercice::paginate();
+        $exercices = Exercice::orderBy('annee','DESC')->get();
         return view('livewire.exercice-wire',compact('exercices'));
     }
 }

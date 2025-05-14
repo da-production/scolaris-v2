@@ -52,7 +52,7 @@
 }
 
 [data-flux-label] {
-    @apply  !mb-0 !leading-tight;
+    @apply !mb-0 !leading-tight;
 }
 
 input:focus[data-flux-control],
@@ -65,21 +65,59 @@ select:focus[data-flux-control] {
     @apply size-4;
 } */
 .choices__input {
-    background-color: #f3f4f6; /* Couleur de fond */
-    border: 2px solid #4a90e2; /* Bordure bleue */
-    border-radius: 8px; /* Coins arrondis */
-    padding: 10px; /* Espacement interne */
-    font-size: 16px; /* Taille du texte */
-  }
+    background-color: #f3f4f6;
+    /* Couleur de fond */
+    border: 2px solid #4a90e2;
+    /* Bordure bleue */
+    border-radius: 8px;
+    /* Coins arrondis */
+    padding: 10px;
+    /* Espacement interne */
+    font-size: 16px;
+    /* Taille du texte */
+}
 
-  .my-custom-input {
+.my-custom-input {
     background-color: #fff3cd;
     border: 1px solid #ffcc00;
     padding: 8px;
-  }
+}
 
-  .ts-dropdown{
+.ts-dropdown {
     position: absolute;
     overflow-y: scroll;
     max-height: 100px;
-  }
+}
+
+[data-flux-main]{
+    background: linear-gradient(135deg, #fef8eb, #e6f0fd, #fbf0ff);
+    background-size: cover;
+}
+.dark [data-flux-main]{
+    background: linear-gradient(135deg, #171717, #24262a, #161a28);
+    background-size: cover;
+}
+[data-flux-main] [data-flux-navlist-item]{
+    padding: 20px 15px;
+    transition: all;
+    -webkit-transition: all;
+    -moz-transition: all;
+    -ms-transition: all;
+    -o-transition: all;
+}
+[data-flux-main]  [data-flux-navlist-item]:hover{
+    @apply shadow;
+    background-color: #ffffff;
+    color: #33998b;
+}
+[data-flux-main]  [data-flux-navlist-item].active{
+    @apply shadow;
+    background-color: #33998b;
+    color: #ffffff;
+}
+.rebeccapurple{
+    background-color: rebeccapurple;
+}
+.bg__teal{
+    background-color: #33998b;
+}

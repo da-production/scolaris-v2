@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Actions\LogAction;
 use App\Livewire\Actions\Login;
 use App\Models\Otp;
 use App\Models\User;
@@ -49,6 +50,9 @@ class OtpWire extends Component
         $otp = Otp::where('code',$this->code)->first();
         Auth::loginUsingId($otp->user_id,$this->remember);
         Otp::where('user_id',$otp->user_id)->delete();
+        LogAction::store(request(),request()->user()->id,'otp login','User',[
+            'email' => $otp->email,
+        ],'Login with OTP');
         Session::regenerate();
         // login user
         return redirect()->route('home');

@@ -17,4 +17,8 @@ class Exercice extends Model
         'note',
         'is_closed'
     ];
+
+    protected $casts = [
+        'annee' => 'integer',
+    ];
 }

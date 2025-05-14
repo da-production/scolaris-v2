@@ -2,12 +2,14 @@
 
 namespace App\Livewire\Auth;
 
+use App\Actions\LogAction;
 use App\Events\OtpEvent;
 use App\Models\Otp;
 use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -36,7 +38,7 @@ class Login extends Component
         /**
          * Delete it after
          */
-        return $this->LoginOnlyLocal();
+        // return $this->LoginWithoutOtp();
         /**
          * TODO:
          * 1- check crediential 
@@ -47,45 +49,43 @@ class Login extends Component
 
         $this->ensureIsNotRateLimited();
 
+        // return $this->LoginWithOtp();
+
+        return $this->LoginWithoutOtp();
+    }
+    protected function LoginWithOtp(){
         $user = User::where('email',$this->email)->first();
         if(!is_null($user) && Hash::check($this->password,$user->password)){
-            // todo create otp code
-            $otp    = random_int(000000,99999);
-            $token  = Str::random(16);
-            Otp::create([
-                'user_id'   => $user->id,
-                'token'     => $token,
-                'code'      => $otp,
-                'remember'  => $this->remember
-            ]);
-            event(new OtpEvent($otp,$token,$user));
+            try{
+                $otp    = random_int(000000,99999);
+                $token  = Str::random(16);
+                Otp::create([
+                    'user_id'   => $user->id,
+                    'token'     => $token,
+                    'code'      => $otp,
+                    'remember'  => $this->remember
+                ]);
 
-            // redirect to otp page with token
-            return redirect(route('otp')."?token=".$token);
+                LogAction::store(request(),$user->id,'attempt to login','User',[
+                    'email' => $this->email,
+                    'remember' => $this->remember
+                ],'attempt to login with OTP');
+                event(new OtpEvent($otp,$token,$user));
+
+                // redirect to otp page with token
+                return redirect(route('otp')."?token=".$token);
+            }catch(\Exception $e){
+                session()->flash('error', 'An error occurred while saving the specialite: ' . $e->getMessage());
+                Log::error('Error creating specialite: ' . $e->getMessage());
+                return;
+            }
             
         }else{
             // display error message
             return;
         }
-
-        /**
-         * old code
-         */
-        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
-        }
-
-        RateLimiter::clear($this->throttleKey());
-        Session::regenerate();
-
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }
-
-    protected function LoginOnlyLocal(){
+    protected function LoginWithoutOtp(){
         if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
@@ -93,6 +93,11 @@ class Login extends Component
                 'email' => __('auth.failed'),
             ]);
         }
+
+        LogAction::store(request(),request()->user()->id,'login','User',[
+            'email' => $this->email,
+            'remember' => $this->remember
+        ],'Login without OTP');
 
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();

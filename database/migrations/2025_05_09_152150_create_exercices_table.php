@@ -18,8 +18,8 @@ return new class extends Migration
             $table->timestamp('opened_at');
             $table->timestamp('closed_trait');
             $table->timestamp('displayed_at');
-            $table->longText('conditions');
-            $table->longText('note');
+            $table->longText('conditions')->nullable();
+            $table->longText('note')->nullable();
             $table->boolean('is_closed')->default(false);
             $table->timestamps();
         });
