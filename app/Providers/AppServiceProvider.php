@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,11 +33,19 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Blade::if('hasAnyOf', function ($roles = [], $permissions = []) {
-        $user = Auth::user();
+            $user = Auth::user();
 
-        if (!$user) return false;
+            if (!$user) return false;
 
-        return $user->hasAnyRole($roles) || $user->hasAnyPermission($permissions);
-    });
+            return $user->hasAnyRole($roles) || $user->hasAnyPermission($permissions);
+        });
+
+        try {
+            DB::connection()->getPDO();
+            
+        } catch (\Exception $e) {
+            Log::error('❌ Impossible de se connecter à la base de données : ' . $e->getMessage());
+            abort(502, 'Database connection error: ' . $e->getMessage());
+        }
     }
 }

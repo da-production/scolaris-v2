@@ -88,7 +88,10 @@ select:focus[data-flux-control] {
     overflow-y: scroll;
     max-height: 100px;
 }
-
+.bg__gradient{
+    background: linear-gradient(135deg, #fef8eb, #e6f0fd, #e5fff8);
+    background-size: cover;
+}
 [data-flux-main]{
     background: linear-gradient(135deg, #fef8eb, #e6f0fd, #fbf0ff);
     background-size: cover;

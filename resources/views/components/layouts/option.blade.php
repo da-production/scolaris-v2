@@ -1,4 +1,4 @@
-<section class="w-full bg__gradient">
+<section class="w-full ">
     <div class="relative mb-6 w-full">
         <flux:heading size="xl" level="1">Gestion des paramètres des applications <b>SCOLARIS</b> et <b>SCOLARIS INSCRIPTION</b></flux:heading>
         <flux:subheading size="lg" class="mb-6">Configurez et personnalisez les paramètres des applications depuis une interface centralisée pour assurer leur bon fonctionnement.</flux:subheading>

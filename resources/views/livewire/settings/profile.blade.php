@@ -34,10 +34,32 @@
                     </div>
 
                     <x-action-message class="me-3" on="profile-updated">
-                        {{ __('Saved.') }}
+                        {{ __('Enregistrer.') }}
                     </x-action-message>
                 </div>
             </form>
+            <div class="max-w-lg bg-white rounded-2xl shadow-lg p-6 space-y-4">
+                <h2 class="text-xl font-semibold text-gray-800">Changer d'exercice</h2>
+                <p class="text-gray-600 text-sm">
+                    Sélectionnez un exercice parmi la liste pour le remplacer dans votre routine.
+                </p>
+
+                <div>
+                    <label for="exercice" class="block text-sm font-medium text-gray-700 mb-1">
+                    Choisir un exercice
+                    </label>
+                    <select id="exercice" wire:model.change="exercice" class="w-full border border-gray-300 rounded-lg p-2 text-sm text-gray-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <option disabled selected>-- Sélectionner un exercice --</option>
+                    @foreach ($exercices as $exercice)
+                        <option value="{{ $exercice->annee }}">{{ $exercice->annee }}</option>
+                        
+                    @endforeach
+                    </select>
+                </div>
+
+                
+            </div>
+
             
             <livewire:settings.delete-user-form />
         </x-settings.layout>

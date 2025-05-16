@@ -15,4 +15,9 @@ class Specialite extends Model
         'description',
         'is_active'
     ];
+
+    public function sousSpecialites()
+    {
+        return $this->hasMany(SousSpecialite::class);
+    }
 }

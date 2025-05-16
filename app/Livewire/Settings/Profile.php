@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Settings;
 
+use App\Models\Exercice;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -14,6 +15,9 @@ class Profile extends Component
 
     public string $email = '';
 
+    public  $exercice;
+    public $exercices;
+
     /**
      * Mount the component.
      */
@@ -21,6 +25,8 @@ class Profile extends Component
     {
         $this->name = Auth::user()->name;
         $this->email = Auth::user()->email;
+        $this->exercice = Auth::user()->exercice;
+        $this->exercices = Exercice::all();
     }
 
     /**
@@ -70,5 +76,16 @@ class Profile extends Component
         $user->sendEmailVerificationNotification();
 
         Session::flash('status', 'verification-link-sent');
+    }
+
+    public function updatedExercice($value): void
+    {
+        $this->validate([
+            'exercice' => ['required', 'string', 'max:255'],
+        ]);
+
+        $user = Auth::user();
+        $user->exercice = $value;
+        $user->save();
     }
 }
