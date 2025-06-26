@@ -39,14 +39,14 @@
                         <span>{{ __('Classifications') }}</span>
                     </div>
                 </flux:navlist.item>
-                <flux:navlist.item :href="route('administrateur.options.specialites')" 
+                <flux:navlist.item :href="route('administrateur.options.domains')" 
                 @class([
-                    'active' => request()->routeIs('administrateur.options.specialites'),
+                    'active' => request()->routeIs('administrateur.options.domains'),
                 ])
                 wire:navigate>
                     <div class="flex gap-2 items-center">
                         <x-icons.roles class="size-4" />
-                        <span>{{ __('Spécialité') }}</span>
+                        <span>{{ __('Domains') }}</span>
                     </div>
                 </flux:navlist.item>
                 <flux:navlist.item :href="route('administrateur.options.filieres')" 
@@ -59,6 +59,28 @@
                         <span>{{ __('Filieres') }}</span>
                     </div>
                 </flux:navlist.item>
+                <flux:navlist.item :href="route('administrateur.options.specialites')" 
+                @class([
+                    'active' => request()->routeIs('administrateur.options.specialites'),
+                ])
+                wire:navigate>
+                    <div class="flex gap-2 items-center">
+                        <x-icons.roles class="size-4" />
+                        <span>{{ __('Spécialité') }}</span>
+                    </div>
+                </flux:navlist.item>
+
+                <flux:navlist.item :href="route('administrateur.options.specialites.concours')" 
+                @class([
+                    'active' => request()->routeIs('administrateur.options.specialites.concours'),
+                ])
+                wire:navigate>
+                    <div class="flex gap-2 items-center">
+                        <x-icons.roles class="size-4" />
+                        <span>{{ __('Spécialité concours') }}</span>
+                    </div>
+                </flux:navlist.item>
+                
                 <flux:navlist.item :href="route('administrateur.options.motifs')" 
                 @class([
                     'active' => request()->routeIs('administrateur.options.motifs'),

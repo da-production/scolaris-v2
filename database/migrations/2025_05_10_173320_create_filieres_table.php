@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('filieres', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('domain_id')->nullable()->constrained('domains')->onDelete('set null');
             $table->string('name_fr');
             $table->string('name_ar')->nullable();
-            $table->boolean('is_visible')->default(true);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

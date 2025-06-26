@@ -1,4 +1,6 @@
 @use("Illuminate\Support\Str")
+@use('App\Models\Specialite')
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
@@ -6,6 +8,7 @@
         
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
+        <livewire:user-auth-logout />
         <flux:sidebar sticky stashable class="border-r border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
@@ -16,8 +19,40 @@
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-                    <flux:navlist.item icon="home" :href="route('administrateur.candidats.index')" :current="request()->routeIs('administrateur.candidats.index')" wire:navigate>{{ __('Candidats') }}</flux:navlist.item>
-                    <flux:navlist.item icon="home" :href="route('administrateur.candidats.candidatures')" :current="request()->routeIs('administrateur.candidats.candidatures')" wire:navigate>{{ __('Candidatures') }}</flux:navlist.item>
+                    <flux:navlist.item  :href="route('administrateur.candidats.index')" :current="request()->routeIs('administrateur.candidats.index')" wire:navigate >
+                        <div class="flex items-center gap-2">
+                            <x-icons.students class="w-5 h-5" />
+                            {{ __('Candidats') }}
+                        </div>
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('administrateur.candidats.candidatures')" :current="request()->routeIs('administrateur.candidats.candidatures')" wire:navigate>
+                        <div class="flex items-center gap-2">
+                            <x-icons.candidature class="w-5 h-5" />
+                            {{ __('Candidatures') }}
+                        </div>
+                    </flux:navlist.item>
+                </flux:navlist.group>
+
+                <flux:navlist.group :heading="__('Candidatures par specialite')" class="grid">
+                    @foreach (Specialite::all() as $specialite)
+                        <flux:navlist.item  :href="route('administrateur.candidats.candidatures.specialite', ['specialite_id' => $specialite->id])" :current="request()->routeIs('administrateur.candidats.candidatures.specialite')" wire:navigate class="py-2">
+                            <div class="flex items-center gap-2">
+                                <x-icons.folder-open class="w-5 h-5" />
+                                <div class="flex justify-between w-full items-center">
+                                    <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                                        {{ $specialite->code }}
+                                    </span>
+                                    @if ($specialite->is_active)
+                                        <span class="text-xs font-semibold bg-green-500 dark:bg-green-400 p-1 rounded-full"></span>
+                                    @else
+                                        <span class="text-xs font-semibold bg-red-500 dark:bg-red-400 p-1 rounded-full">
+                                        </span>
+                                        
+                                    @endif
+                                </div>
+                            </div>
+                        </flux:navlist.item>
+                    @endforeach
                 </flux:navlist.group>
             </flux:navlist>
 
@@ -25,6 +60,7 @@
 
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Settings')" class="grid">
+                    <livewire:connected-user-wire />
                     @hasAnyOf(['root', 'administrator'],['view options'])
                         <flux:navlist.item icon="users" :current="Str::contains(Route::currentRouteName(), 'administrateur.options')" href="{{ route('administrateur.options.index') }}">
                             {{ __('Options') }}
@@ -72,7 +108,7 @@
 
                     <flux:menu.separator />
 
-                    <form method="POST" action="{{ route('logout') }}" class="w-full">
+                    <form method="POST" action="{{ route('logout') }}" class="w-full" id="logout-form">
                         @csrf
                         <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
                             {{ __('Log Out') }}
@@ -137,5 +173,21 @@
 
 
         @fluxScripts
+        <script>
+            @if(config('app.enable_reverb'))
+            document.addEventListener('livewire:init', () => {
+                console.log('Livewire is loaded!');
+                // Already initialized via Livewire in most setups
+                window.Echo.private(`logout.user.{{ auth()->user()->id }}`)
+                    .listen('.forced.logout', (e) => {
+                        console.log('User forced to logout!', e);
+                        window.Livewire.dispatch('Login:logoutUser',{id: e.id});
+                        // Optional: force logout in frontend
+                        // window.location.href = '/logout'; // or emit Livewire logout action
+                    });
+            });
+            @endif
+
+        </script>
     </body>
 </html>

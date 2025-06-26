@@ -22,7 +22,7 @@
                                 </th>
                                 <th class="p-4 border-b border-slate-300 bg-slate-50">
                                     <p class="block text-sm font-normal leading-none text-slate-500">
-                                        Sous specialite
+                                        Specialite Concour
                                     </p>
                                 </th>
                                 <th class="p-4 border-b border-slate-300 bg-slate-50">
@@ -40,7 +40,7 @@
                                         <flux:modal.trigger name="add-specialite-modal">
                                             <flux:button variant="primary" size="sm" x-data="" x-on:click.prevent="$dispatch('open-modal', 'add-specialite-modal')">
                                                 <x-icons.plus-circle width="24" height="24" />
-                                            {{ __('Ajouter une specialite') }}
+                                            {{ __('Ajouter') }}
                                             </flux:button>
                                         </flux:modal.trigger>
                                     </div>
@@ -58,6 +58,9 @@
                                     </td>
                                     <td class="p-4 border-b border-slate-200">
                                         <p class="block text-sm text-slate-800">
+                                            filiere: {{ $specialite->filiere?->name_fr }}
+                                        </p>
+                                        <p class="block text-sm text-slate-800">
                                             FR: {{ $specialite->name_fr }}
                                         </p>
                                         <p class="block text-sm text-slate-800">
@@ -66,10 +69,15 @@
                                     </td>
                                     <td class="p-4 border-b border-slate-200">
                                         <p class=" text-sm text-slate-800 flex gap-2 items-center">
+                                            <span class=" text-xs px-2 py-0.5 rounded-2xl bg-teal-100 text-teal-500 border-teal-200 border "> @isnull($specialite->specialiteConcour?->name_fr, 'Non renseigné')  </span>
+                                        </p>
+                                    </td>
+                                    {{-- <td class="p-4 border-b border-slate-200">
+                                        <p class=" text-sm text-slate-800 flex gap-2 items-center">
                                             <span wire:click="displaySousSpecialites({{ $specialite->id }})" class="cursor-pointer text-xs px-2 py-0.5 rounded-2xl bg-teal-100 text-teal-500 border-teal-200 border ">{{ $specialite->sous_specialites_count }} | Afficher</span>
                                             <span wire:click="createSousSpecialite({{ $specialite->id }})" class="cursor-pointer text-xs underline text-teal-500" >Ajouter</span>
                                         </p>
-                                    </td>
+                                    </td> --}}
                                     <td class="p-4 border-b border-slate-200">
                                         <p class="block text-sm text-slate-800">
                                             @isnull($specialite->description, 'non renseigné')
@@ -112,8 +120,18 @@
                 <flux:heading size="lg">{{ __('Ajouter une specialite') }}</flux:heading>
 
             </div>
-
-            <flux:input wire:model="code" :label="__('Code')" type="text" />
+            <flux:select wire:model="filiere_id" placeholder="filieres">
+                <flux:select.option>Filieres</flux:select.option>
+                @foreach ($filieres as $filiere)
+                    <flux:select.option value="{{ $filiere->id }}">{{ $filiere->name_fr }}</flux:select.option>
+                @endforeach
+            </flux:select>
+            <flux:select wire:model="specialite_concour_id" placeholder="Specialite Concours">
+                <flux:select.option>specialite concour</flux:select.option>
+                @foreach ($cSpecialites as $cSpecialite)
+                    <flux:select.option value="{{ $cSpecialite->id }}"  >{{ $cSpecialite->name_fr }}</flux:select.option>
+                @endforeach
+            </flux:select>
             <flux:input wire:model="name_fr" :label="__('Lebelle FR')" type="text" />
             <flux:input wire:model="name_ar" :label="__('Lebelle AR')" type="text" />
             <div class="p-4 max-w-xl flex gap-2  items-center">
@@ -241,7 +259,7 @@
                                         
                                         <x-dropdown trigger="Options">
                                             <button wire:click="editSousSpecialite('{{$sous_specialite->id}}')"  class="cursor-pointer rounded-md block text-left w-full px-4 py-2 hover:bg-gray-100">{{ __('edit') }}</button>
-                                            <button x-on:click="confirm('Are you sure u want to delete {{ $sous_specialite->name_fr }}') ? @this.call('delete','{{$sous_specialite->id}}') : null"  class="cursor-pointer rounded-md block text-left w-full px-4 py-2 text-red-500 hover:bg-red-100">{{ __('delete') }}</button>
+                                            <button x-on:click="confirm('Are you sure u want to delete {{ $sous_specialite->name_fr }}') ? @this.call('deleteSousSpecialite','{{$sous_specialite->id}}') : null"  class="cursor-pointer rounded-md block text-left w-full px-4 py-2 text-red-500 hover:bg-red-100">{{ __('delete') }}</button>
                                         </x-dropdown>
                                         
                                     </div>

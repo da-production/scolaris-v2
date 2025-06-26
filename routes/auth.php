@@ -11,7 +11,7 @@ use App\Livewire\Auth\VerifyEmail;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
-    Route::get('login', Login::class)->name('login');
+    Route::get('connexion', Login::class)->name('login');
     // Route::get('register', Register::class)->name('register');
     Route::get('otp',OtpWire::class)->name('otp');
     Route::get('forgot-password', ForgotPassword::class)->name('password.request');

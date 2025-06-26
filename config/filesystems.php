@@ -37,6 +37,12 @@ return [
             'throw' => false,
             'report' => false,
         ],
+        
+        'private' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/candidatures'),
+            'visibility' => 'private',
+        ],
 
         'public' => [
             'driver' => 'local',

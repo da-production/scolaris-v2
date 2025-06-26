@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Domain;
 use App\Models\Filiere;
 use Flux\Flux;
 use Livewire\Component;
@@ -11,12 +12,14 @@ class FiliereWire extends Component
     public $id;
     public $name_fr;
     public $name_ar;
-    public $is_visible;
+    public $domain_id;
+    public $is_active;
 
     public function render()
     {
-        $filieres = Filiere::orderBy('created_at','DESC')->get();
-        return view('livewire.filiere-wire',compact('filieres'));
+        $filieres = Filiere::with('domain')->orderBy('created_at','DESC')->get();
+        $domains = Domain::all();
+        return view('livewire.filiere-wire',compact('filieres','domains'));
     }
 
     public function save(){
@@ -28,16 +31,14 @@ class FiliereWire extends Component
     }
 
     protected function store(){
-        $this->validate([
+        $validate = $this->validate([
+            'domain_id'     => ['required','exists:domains,id'],
             'name_fr'      => ['required','min:10','max:255'],
             'name_ar'      => ['required','min:10','max:255'],
-            'is_visible'   => ['nullable','boolean'],
+            'is_active'   => ['nullable','boolean'],
         ]);
 
-        Filiere::create([
-            ...$this->only('name_fr','name_ar'),
-            'is_visible'    => $this->is_visible ? true : false
-        ]);
+        Filiere::create($validate);
 
         $this->reset();
 
@@ -45,16 +46,14 @@ class FiliereWire extends Component
     }
 
     protected function update(){
-        $this->validate([
-            'name_fr'      => ['required','min:10','max:255'],
-            'name_ar'      => ['required','min:10','max:255'],
-            'is_visible'   => ['nullable','boolean'],
+        $validate = $this->validate([
+            'domain_id'     => ['required','exists:domains,id'],
+            'name_fr'       => ['required','min:10','max:255'],
+            'name_ar'       => ['required','min:10','max:255'],
+            'is_active'    => ['nullable','boolean'],
         ]);
         Filiere::where('id',$this->id)
-        ->update([
-            ...$this->only('name_fr','name_ar'),
-            'is_visible'    => $this->is_visible ? true : false
-        ]);
+        ->update($validate);
 
         $this->reset();
 
@@ -65,7 +64,8 @@ class FiliereWire extends Component
         $this->id = $motif->id;
         $this->name_fr = $motif->name_fr;
         $this->name_ar = $motif->name_ar;
-        $this->is_visible = $motif->is_visible ? true : false;
+        $this->domain_id = $motif->domain_id;
+        $this->is_active = $motif->is_active ? true : false;
         Flux::modal('add-filiere-modal')->show();
 
     }

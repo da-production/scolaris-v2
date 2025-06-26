@@ -48,6 +48,9 @@
                                     </td>
                                     <td class="p-4 border-b border-slate-200">
                                         <p class="block text-sm text-slate-800">
+                                            Domaine: {{ $filiere->domain?->name_fr }}
+                                        </p>
+                                        <p class="block text-sm text-slate-800">
                                             FR: {{ $filiere->name_fr }}
                                         </p>
                                         <p class="block text-sm text-slate-800">
@@ -55,7 +58,7 @@
                                         </p>
                                     </td>
                                     <td class="p-4 border-b border-slate-200">
-                                        @if ($filiere->is_visible)
+                                        @if ($filiere->is_active)
                                             <span class="text-green-500 font-semibold text-xs px-1 py-0.5 rounded bg-green-100 border border-green-200">Actif</span>
                                             
                                         @else
@@ -91,12 +94,17 @@
                 <flux:heading size="lg">{{ __('Ajouter une filiere') }}</flux:heading>
 
             </div>
-
+            <flux:select wire:model="domain_id" placeholder="Domaines">
+                <flux:select.option>Domaines</flux:select.option>
+                @foreach ($domains as $domain)
+                    <flux:select.option value="{{ $domain->id }}">{{ $domain->name_fr }}</flux:select.option>
+                @endforeach
+            </flux:select>
             <flux:input wire:model="name_fr" :label="__('Lebelle FR')" type="text" />
             <flux:input wire:model="name_ar" :label="__('Lebelle AR')" type="text" />
             <div class="p-4 max-w-xl flex gap-2  items-center">
-                <label for="is_visible">{{ __('Activer') }}</label>
-                <input wire:model="is_visible" id="is_visible" type="checkbox" />
+                <label for="is_active">{{ __('Activer') }}</label>
+                <input wire:model="is_active" id="is_active" type="checkbox" />
             </div>
             
             <div class="flex justify-end space-x-2">

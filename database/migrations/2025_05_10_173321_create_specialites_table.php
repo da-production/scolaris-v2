@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('specialites', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
+            $table->foreignId("filiere_id")->nullable()->constrained('filieres')->onDelete('set null');
+            $table->foreignId("specialite_concour_id")->nullable()->constrained('specialite_concours')->onDelete('set null');
             $table->string('name_fr');
             $table->string('name_ar')->nullable();
             $table->string('description')->nullable();
+            $table->decimal('ponderation')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

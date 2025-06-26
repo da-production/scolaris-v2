@@ -4,10 +4,12 @@ namespace App\Livewire\Auth;
 
 use App\Actions\LogAction;
 use App\Events\OtpEvent;
+use App\Events\UserAuthEvent;
 use App\Models\Otp;
 use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
@@ -15,6 +17,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -99,10 +102,14 @@ class Login extends Component
             'remember' => $this->remember
         ],'Login without OTP');
 
+        if(config('app.enable_reverb')){
+            Broadcast::event(new UserAuthEvent(Auth::user()->id));
+        }
+
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        $this->redirectIntended(default: route('settings.profile', absolute: false), navigate: true);
         return;
     }
 
@@ -134,4 +141,6 @@ class Login extends Component
     {
         return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
     }
+
+    
 }

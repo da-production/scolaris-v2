@@ -12,7 +12,8 @@ return [
     | other UI elements where an application name needs to be displayed.
     |
     */
-
+    'enable_reverb' => env('ENABLE_REVERB', false),
+    
     'name' => env('APP_NAME', 'Laravel'),
 
     /*

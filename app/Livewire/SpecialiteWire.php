@@ -2,8 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Models\Filiere;
 use App\Models\SousSpecialite;
 use App\Models\Specialite;
+use App\Models\SpecialiteConcour;
 use Flux\Flux;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
@@ -14,6 +16,8 @@ class SpecialiteWire extends Component
 {
     public $id;
     public $sous_specialite_id;
+    public $specialite_concour_id;
+    public $filiere_id;
     public $code;
     public $name_fr;
     public $name_ar;
@@ -26,8 +30,10 @@ class SpecialiteWire extends Component
 
     public function render()
     {
-        $specialites = Specialite::withCount('sousSpecialites')->get();
-        return view('livewire.specialite-wire', compact('specialites'));
+        $specialites = Specialite::with('specialiteConcour')->get();
+        $cSpecialites = SpecialiteConcour::all();
+        $filieres = Filiere::all();
+        return view('livewire.specialite-wire', compact('specialites','filieres','cSpecialites'));
     }
 
     public function save(){
@@ -38,24 +44,17 @@ class SpecialiteWire extends Component
         }
     }
     private function store(){
-        $this->validate([
-            'code' => 'required|unique:specialites,code',
+        $validate = $this->validate([
+            'filiere_id' => 'required|exists:filieres,id',
             'name_fr' => 'required',
             'name_ar' => 'nullable',
-            'coefficient' => 'nullable|numeric',
+            // 'coefficient' => 'nullable|numeric',
             'description' => 'nullable|string',
-            'is_active' => 'boolean'
+            'is_active' => 'nullable|boolean'
         ]);
         
         try{
-            Specialite::create([
-                'code' => $this->code,
-                'name_fr' => $this->name_fr,
-                'name_ar' => $this->name_ar,
-                'coefficient' => $this->coefficient,
-                'description' => $this->description,
-                'is_active' => $this->is_active
-            ]);
+            Specialite::create($validate);
             $this->reset();
             Flux::modal('add-specialite-modal')->close();
             Toaster::success('User created!'); // 👈
@@ -68,24 +67,18 @@ class SpecialiteWire extends Component
     }
 
     private function update(){
-        $this->validate([
-            'code' => ['required', 'string', 'max:255', Rule::unique('specialites')->ignore($this->id)],
-            'name_fr' => 'required',
-            'name_ar' => 'nullable',
-            'coefficient' => 'nullable|numeric',
-            'description' => 'nullable|string',
-            'is_active' => 'boolean'
+        $validate = $this->validate([
+            'filiere_id'            => 'required|exists:filieres,id',
+            'specialite_concour_id' => 'required|exists:specialite_concours,id',
+            'name_fr'               => 'required',
+            'name_ar'               => 'nullable',
+            // 'coefficient' => 'nullable|numeric',
+            'description'           => 'nullable|string',
+            'is_active'             => 'nullable|boolean'
         ]);
 
         try{
-            Specialite::where('id',$this->id)->update([
-                'code' => $this->code,
-                'name_fr' => $this->name_fr,
-                'name_ar' => $this->name_ar,
-                'coefficient' => $this->coefficient,
-                'description' => $this->description,
-                'is_active' => $this->is_active
-            ]);
+            Specialite::where('id',$this->id)->update($validate);
             $this->reset();
             Flux::modal('add-specialite-modal')->close();
             session()->flash('message', 'Specialite updated successfully.');
@@ -99,13 +92,14 @@ class SpecialiteWire extends Component
     public function editSpecialite(Specialite $specialite){
         $this->reset();
         Flux::modal('add-specialite-modal')->show();
-        $this->id = $specialite->id;
-        $this->code = $specialite->code;
-        $this->name_fr = $specialite->name_fr;
-        $this->name_ar = $specialite->name_ar;
-        $this->coefficient = $specialite->coefficient;
-        $this->description = $specialite->description;
-        $this->is_active = $specialite->is_active;
+        $this->id                       = $specialite->id;
+        $this->filiere_id               = $specialite->filiere_id;
+        $this->specialite_concour_id    = $specialite->specialite_concour_id;
+        $this->name_fr                  = $specialite->name_fr;
+        $this->name_ar                  = $specialite->name_ar;
+        // $this->coefficient = $specialite->coefficient;
+        $this->description              = $specialite->description;
+        $this->is_active                = $specialite->is_active;
     }
 
     public function clearForm(){
@@ -125,6 +119,17 @@ class SpecialiteWire extends Component
         }
     }
 
+    public function deleteSousSpecialite(SousSpecialite $sousSpecialite){
+        try{
+            $sousSpecialite->delete();
+            session()->flash('message', 'Sous Specialite deleted successfully.');
+            $this->sous_specialites = $sousSpecialite->specialite->sousSpecialites;
+        }catch(\Exception $e){
+            Log::error('Error deleting sous specialite: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while deleting the sous specialite: ' . $e->getMessage());
+        }
+    }
+
     public function createSousSpecialite(Specialite $specialite){
         $this->reset();
         Flux::modal('add-sous-specialite-modal')->show();
@@ -141,7 +146,6 @@ class SpecialiteWire extends Component
 
     public function storeSousSpecialite(){
         $this->validate([
-            'code' => 'required|unique:sous_specialites,code',
             'name_fr' => 'required',
             'name_ar' => 'nullable',
             'ponderation' => 'nullable|numeric',
@@ -150,7 +154,6 @@ class SpecialiteWire extends Component
         ]);
         try{
             Specialite::find($this->id)->sousSpecialites()->create([
-                'code' => $this->code,
                 'name_fr' => $this->name_fr,
                 'name_ar' => $this->name_ar,
                 'ponderation' => $this->ponderation,
@@ -168,7 +171,7 @@ class SpecialiteWire extends Component
 
     public function updateSousSpecialite(){
         $this->validate([
-            'code' => ['required', 'string', 'max:255', Rule::unique('sous_specialites')->ignore($this->sous_specialite_id)],
+            // 'code' => ['required', 'string', 'max:255', Rule::unique('sous_specialites')->ignore($this->sous_specialite_id)],
             'name_fr' => 'required',
             'name_ar' => 'nullable',
             'ponderation' => 'nullable|numeric',
@@ -178,7 +181,6 @@ class SpecialiteWire extends Component
 
         try{
             SousSpecialite::where('id',$this->sous_specialite_id)->update([
-                'code' => $this->code,
                 'name_fr' => $this->name_fr,
                 'name_ar' => $this->name_ar,
                 'ponderation' => $this->ponderation,

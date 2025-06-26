@@ -98,9 +98,9 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <div class="mt-5">
-                            {{ $candidats->links() }}
-                        </div>
+                    </div>
+                    <div class="my-5">
+                        {{ $candidats->links() }}
                     </div>
                 </div>
 

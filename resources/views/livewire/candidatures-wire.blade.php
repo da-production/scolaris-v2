@@ -4,7 +4,12 @@
         <div class="relative h-full flex-1  rounded-xl p-2 border border-neutral-200 dark:border-neutral-700">
             <div class="w-full h-full bg-white relative z-10 rounded-lg p-4 border">
                 <div class="w-full">
-                    <h3 class="text-lg font-semibold ml-3 text-slate-800">Gestion des <b>Candidatures</b></h3>
+                    <h3 class="text-lg font-semibold ml-3 text-slate-800">
+                        Gestion des <b>Candidatures</b>
+                    @if ($specialite)
+                        <span class="text-sm text-slate-500">{{ $specialite->code }} - {{ $specialite->name_fr }}</span>
+                    @endif
+                    </h3>
                     <p class="text-slate-500 mb-5 ml-3"> modifiez et gérez les parametres des classification.</p>
                 </div>
                 <div class="relative  flex flex-col w-full text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
@@ -98,9 +103,9 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <div class="mt-5">
-                            {{ $candidatures->links() }}
-                        </div>
+                    </div>
+                    <div class="my-5">
+                        {{ $candidatures->links() }}
                     </div>
                 </div>
 

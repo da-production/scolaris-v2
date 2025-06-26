@@ -4,6 +4,12 @@
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
 
+    @if (session('auth_conflict'))
+        <div class="p-3 text-xs text-center bg-orange-100 border rounded-lg border-orange-200 text-orange-600 dark:text-orange-400">
+            {{ session('auth_conflict') }}
+        </div>
+    @endif
+
     <form wire:submit="login" class="flex flex-col gap-6">
         <!-- Email Address -->
         <flux:input

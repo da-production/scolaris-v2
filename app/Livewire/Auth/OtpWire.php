@@ -3,10 +3,12 @@
 namespace App\Livewire\Auth;
 
 use App\Actions\LogAction;
+use App\Events\UserAuthEvent;
 use App\Livewire\Actions\Login;
 use App\Models\Otp;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -53,8 +55,12 @@ class OtpWire extends Component
         LogAction::store(request(),request()->user()->id,'otp login','User',[
             'email' => $otp->email,
         ],'Login with OTP');
+
+        if(config('app.enable_reverb')){
+            Broadcast::event(new UserAuthEvent(Auth::user()->id));
+        }
         Session::regenerate();
         // login user
-        return redirect()->route('home');
+        return redirect()->route('settings.profile');
     }
 }
