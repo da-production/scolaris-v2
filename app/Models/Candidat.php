@@ -33,11 +33,19 @@ class Candidat extends Authenticatable
         'exercice',
         'lieu_naissance_id',
         'wilaya_residence_id',
+        'wilaya_id',
+        'profile_picture',
+        'valide',
     ];
 
     public function candidature()
     {
         return $this->belongsTo(Candidature::class);
+    }
+
+    public function wilaya()
+    {
+        return $this->belongsTo(Wilaya::class);
     }
     protected $casts = [
         'genre' => \App\Casts\GenderCast::class,

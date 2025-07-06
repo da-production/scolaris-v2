@@ -39,7 +39,8 @@ class UserForm extends Form
 
         return User::create([
             ...$this->only('name','email'),
-            'password'  => Hash::make($this->password)
+            'password'  => Hash::make($this->password),
+            'exercise'  => now()->year,
         ]);
     }
 

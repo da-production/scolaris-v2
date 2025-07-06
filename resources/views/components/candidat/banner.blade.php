@@ -1,4 +1,4 @@
-<div class="max-w-[85rem] w-full px-4 sm:px-6 lg:px-8 mx-auto">
+<div class="max-w-[85rem] w-full   mx-auto">
     <div
         class="bg-blue-600 bg-[url('https://preline.co/assets/svg/examples/abstract-1.svg')] bg-no-repeat bg-cover bg-center p-4 rounded-lg text-center">
         <div class="flex flex-wrap justify-center items-center gap-2">

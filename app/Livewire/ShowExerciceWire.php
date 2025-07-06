@@ -2,9 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Models\Candidature;
 use App\Models\Exercice;
 use App\Rules\IsYear;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 
 class ShowExerciceWire extends Component
@@ -51,6 +53,17 @@ class ShowExerciceWire extends Component
         $this->exercice->update([
             ...$this->except('error','exercice'),
         ]);
+
+        if($this->is_closed){
+            Candidature::where('exercice', $this->exercice->annee)
+                ->where('decision','EN_ATTENTE')
+                ->update([
+                    'decision' => 'NON_CLASSE',
+                    'commentaire' => 'Non classé ou ne figure pas parmi les 100 premiers du classement',
+                ]);
+        }
+
+        Cache::forget('exercice');
 
         /**
          * TODO if the exercice is closed, 

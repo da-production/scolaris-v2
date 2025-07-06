@@ -30,8 +30,10 @@ return new class extends Migration
             $table->date('date_naissance')->nullable();
             $table->string('lieu_naissance')->nullable();
             $table->string('adresse')->nullable();
+            $table->text('profile_picture')->nullable();
             $table->integer('etat')->nullable();
             $table->foreignId('wilaya_id')->nullable()->constrained('wilayas')->onDelete('set null');
+            $table->boolean('valide')->default(false);
             $table->timestamps();
 
             $table->unique(['numero_bac', 'annee_bac', 'email','exercice'], 'unique_candidat_authentication');

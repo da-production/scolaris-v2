@@ -22,7 +22,7 @@ class LoginWire extends Component
     }
 
     public function login(){
-
+        sleep(1);
         /** 
          * Check the records
          * 
@@ -38,9 +38,9 @@ class LoginWire extends Component
         ->where('annee_bac',$this->annee_bac)
         ->whereYear('exercice',Date('Y'))
         ->first();
-
         if(is_null($candidat)){
             $this->addError('password','Candidat introuvable');
+            return;
         }
 
         if(Hash::check($this->password,$candidat->password)){

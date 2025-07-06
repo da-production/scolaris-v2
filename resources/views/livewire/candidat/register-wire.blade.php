@@ -11,7 +11,9 @@
                 </a>
                 {{-- <h1 class="block text-2xl font-bold text-gray-800 dark:text-white">Inscription</h1> --}}
             </div>
-
+            @if (canCandidatUpdate())
+                
+                
             <div class="mt-5">
                 @error('valide')
                     <p class="text-sm text-red-500 dark:text-neutral-400">
@@ -95,6 +97,14 @@
                 </form>
                 <!-- End Form -->
             </div>
+            
+            @else
+                <div class="bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-3 rounded relative mt-5" role="alert">
+                    <strong class="font-bold">Attention !</strong>
+                    <span class="block sm:inline">Les inscriptions sont clôturées.Vous ne pouvez plus vous inscrire pour l\'exercice en cours.</span>
+                </div>
+
+            @endif
         </div>
     </div>
 </div>

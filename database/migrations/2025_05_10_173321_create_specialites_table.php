@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name_fr');
             $table->string('name_ar')->nullable();
             $table->string('description')->nullable();
-            $table->decimal('ponderation')->nullable();
+            $table->decimal('coefficient')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

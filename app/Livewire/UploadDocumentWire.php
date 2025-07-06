@@ -16,6 +16,12 @@ class UploadDocumentWire extends Component
     // #[Validate('required|file|max:5120')] // max 5MB
     public $file;
 
+    public function updatedFile()
+    {
+        $this->validate();
+        dd("cc");
+        return true;
+    }
     public function save()
     {
         dd(auth()->guard('candidat')->user()->load('candidature'));

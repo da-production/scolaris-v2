@@ -1,5 +1,5 @@
-<header
-    class="flex relative z-50 max-w-[85rem] mx-auto w-full items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f2f5] px-10 py-3">
+<div
+    class="flex relative z-50 max-w-[85rem] mx-auto w-full items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f2f5]  py-3">
     <div class="flex items-center gap-4 text-[#111418]">
         <div class="size-4">
             <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -11,10 +11,10 @@
         <h2 class="text-[#111418] text-lg font-bold leading-tight tracking-[-0.015em]">ESSS Concours</h2>
     </div>
     @if(auth()->guard('candidat')->check())
-    <div class="flex flex-1 justify-end gap-8">
+    <div class="flex flex-1 justify-end gap-8" >
         <div class="flex items-center gap-9">
-            <a class="text-[#111418] text-sm font-medium leading-normal" href="#">Vos informations</a>
-            <a class="text-[#111418] text-sm font-medium leading-normal" href="#">Candidature</a>
+            <a class="text-[#111418] text-sm font-medium leading-normal" href="{{ route('candidat.profile') }}" wire:navigate>Vos informations</a>
+            <a class="text-[#111418] text-sm font-medium leading-normal" href="{{ route('candidat.candidature') }}" wire:navigate>Candidature</a>
             {{-- <a class="text-[#111418] text-sm font-medium leading-normal" href="#">Messages</a> --}}
         </div>
         <div class="relative inline-block text-left">
@@ -30,36 +30,39 @@
             </div>
         </div>
         
+        <script>
+            document.addEventListener('livewire:navigated', () => {
+                const dropdownButton = document.getElementById('dropdown-button');
+                const dropdownMenu = document.getElementById('dropdown-menu');
+                let isDropdownOpen = true; // Set to true to open the dropdown by default, false to close it by default
+
+                // Function to toggle the dropdown
+                function toggleDropdown() {
+                    isDropdownOpen = !isDropdownOpen;
+                    if (isDropdownOpen) {
+                        dropdownMenu.classList.remove('hidden');
+                    } else {
+                        dropdownMenu.classList.add('hidden');
+                    }
+                }
+
+                // Initialize the dropdown state
+                toggleDropdown();
+
+                // Toggle the dropdown when the button is clicked
+                dropdownButton.addEventListener('click', toggleDropdown);
+
+                // Close the dropdown when clicking outside of it
+                window.addEventListener('click', (event) => {
+                    if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                        dropdownMenu.classList.add('hidden');
+                        isDropdownOpen = false;
+                    }
+                });
+            });
+        </script>
     </div>
-    <script>
-        const dropdownButton = document.getElementById('dropdown-button');
-        const dropdownMenu = document.getElementById('dropdown-menu');
-        let isDropdownOpen = true; // Set to true to open the dropdown by default, false to close it by default
-
-        // Function to toggle the dropdown
-        function toggleDropdown() {
-            isDropdownOpen = !isDropdownOpen;
-            if (isDropdownOpen) {
-                dropdownMenu.classList.remove('hidden');
-            } else {
-                dropdownMenu.classList.add('hidden');
-            }
-        }
-
-        // Initialize the dropdown state
-        toggleDropdown();
-
-        // Toggle the dropdown when the button is clicked
-        dropdownButton.addEventListener('click', toggleDropdown);
-
-        // Close the dropdown when clicking outside of it
-        window.addEventListener('click', (event) => {
-            if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                dropdownMenu.classList.add('hidden');
-                isDropdownOpen = false;
-            }
-        });
-    </script>
+    
     @else
     <div class="flex flex-1 justify-end gap-8">
         <div class="flex items-center gap-9">
@@ -72,4 +75,4 @@
     </div>
     @endif
 
-</header>
+</div>

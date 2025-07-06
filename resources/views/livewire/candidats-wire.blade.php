@@ -58,10 +58,10 @@
                                         </td>
                                         <td class="p-4 border-b border-slate-200">
                                             <p class="block text-sm text-slate-800">
-                                                {{ $candidat->nom_fr }} - {{ $candidat->nom_ar }}
+                                                {{ $candidat->nom }} - {{ $candidat->nom_ar }}
                                             </p>
                                             <p class="block text-sm text-slate-800">
-                                                {{ $candidat->prenom_fr }} - {{ $candidat->prenom_ar }}
+                                                {{ $candidat->prenom }} - {{ $candidat->prenom_ar }}
                                             </p>
                                         </td>
                                         <td class="p-4 border-b border-slate-200">
@@ -81,7 +81,7 @@
                                         </td>
                                         <td class="p-4 border-b border-slate-200">
                                             <p class="block text-sm text-slate-800">
-                                                {{ $candidat->wilaya}}
+                                                @isnull($candidat->wilaya?->name_fr, 'Non renseigné')
                                             </p>
                                         </td>
                                         <td class="p-4 border-b border-slate-200">

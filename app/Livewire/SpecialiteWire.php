@@ -48,7 +48,7 @@ class SpecialiteWire extends Component
             'filiere_id' => 'required|exists:filieres,id',
             'name_fr' => 'required',
             'name_ar' => 'nullable',
-            // 'coefficient' => 'nullable|numeric',
+            'coefficient' => 'nullable|numeric',
             'description' => 'nullable|string',
             'is_active' => 'nullable|boolean'
         ]);
@@ -72,7 +72,7 @@ class SpecialiteWire extends Component
             'specialite_concour_id' => 'required|exists:specialite_concours,id',
             'name_fr'               => 'required',
             'name_ar'               => 'nullable',
-            // 'coefficient' => 'nullable|numeric',
+            'coefficient' => 'nullable|numeric',
             'description'           => 'nullable|string',
             'is_active'             => 'nullable|boolean'
         ]);
@@ -97,7 +97,7 @@ class SpecialiteWire extends Component
         $this->specialite_concour_id    = $specialite->specialite_concour_id;
         $this->name_fr                  = $specialite->name_fr;
         $this->name_ar                  = $specialite->name_ar;
-        // $this->coefficient = $specialite->coefficient;
+        $this->coefficient = $specialite->coefficient;
         $this->description              = $specialite->description;
         $this->is_active                = $specialite->is_active;
     }

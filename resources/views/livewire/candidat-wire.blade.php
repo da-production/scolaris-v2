@@ -11,7 +11,7 @@
                         class="max-w-7xl  bg-white dark:bg-gray-800 rounded-xl shadow p-6 flex flex-col md:flex-row gap-6">
                         <!-- Image du candidat -->
                         <div class="w-3/12">
-                            <img src="{{ asset('images/default-profile.png') }}" alt="Photo du candidat"
+                            <img src="{{ $this->profilePhotoUrl() }}" alt="Photo du candidat"
                                 class="w-full h-auto rounded-lg shadow-md object-cover">
                             <a 
                                 class="block mt-4 text-center text-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-4 py-2 rounded transition">

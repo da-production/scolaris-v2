@@ -23,6 +23,7 @@ use App\Livewire\ShowExerciceWire;
 use App\Livewire\SpecialiteConcourWire;
 use App\Livewire\SpecialiteWire;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 Route::get('/', HomeWire::class)->name('home');
 Route::group([
@@ -31,6 +32,9 @@ Route::group([
 ], function () {
     Route::get('candidat/connexion',LoginWire::class)->name('connexion');
     Route::get('inscription',RegisterWire::class)->name('inscription');
+
+    // Route::get('candidat/forgot-password', ForgotPassword::class)->name('password.request');
+    // Route::get('candidat/reset-password/{token}', ResetPassword::class)->name('password.reset');
 });
 
 Route::group([
@@ -40,6 +44,16 @@ Route::group([
 ], function(){
     Route::get('/', ProfileWire::class)->name('profile');
     Route::get('/candidature', CandidatureWire::class)->name('candidature');
+    Route::get('/profile/photo/{filename}', function ($path) {
+    // Optionnel : empêcher les utilisateurs de voir les photos des autres
+        
+
+        if (Storage::disk('private')->exists($path)) {
+            abort(404);
+        }
+
+        return response()->file(Storage::disk('private')->path($path));
+    })->name('profile.photo');
 });
 
 
@@ -66,7 +80,7 @@ Route::prefix('administrateur')
         Route::get('/', CandidatsWire::class)->name('index');
         Route::get('/detail/{candidat}', CandidatWire::class)->name('show');
         Route::get('/candidatures',CandidaturesWire::class)->name('candidatures');
-        Route::get('/candidatures/specialite/{specialite_id}',CandidaturesWire::class)->name('candidatures.specialite');
+        Route::get('/candidatures/specialite/{specialite_concour_id}',CandidaturesWire::class)->name('candidatures.specialite');
     });
     // options resources
     Route::prefix('options')

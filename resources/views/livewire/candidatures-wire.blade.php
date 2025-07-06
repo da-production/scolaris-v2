@@ -63,10 +63,10 @@
                                         </td>
                                         <td class="p-4 border-b border-slate-200">
                                             <p class="block text-sm text-slate-800">
-                                                {{ $candidature->candidat->nom_fr }} - {{ $candidature->candidat->nom_ar }}
+                                                {{ $candidature->candidat->nom }} - {{ $candidature->candidat->nom_ar }}
                                             </p>
                                             <p class="block text-sm text-slate-800">
-                                                {{ $candidature->candidat->prenom_fr }} - {{ $candidature->candidat->prenom_ar }}
+                                                {{ $candidature->candidat->prenom }} - {{ $candidature->candidat->prenom_ar }}
                                             </p>
                                         </td>
                                         <td class="p-4 border-b border-slate-200">
@@ -104,9 +104,11 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="my-5">
-                        {{ $candidatures->links() }}
-                    </div>
+                    @if (!$bySpecialite)
+                        <div class="my-5">
+                            {{ $candidatures->links() }}
+                        </div>
+                    @endif
                 </div>
 
             </div>

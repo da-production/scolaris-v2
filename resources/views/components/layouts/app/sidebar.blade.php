@@ -1,5 +1,5 @@
 @use("Illuminate\Support\Str")
-@use('App\Models\Specialite')
+@use('App\Models\SpecialiteConcour')
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
@@ -34,8 +34,8 @@
                 </flux:navlist.group>
 
                 <flux:navlist.group :heading="__('Candidatures par specialite')" class="grid">
-                    @foreach (Specialite::all() as $specialite)
-                        <flux:navlist.item  :href="route('administrateur.candidats.candidatures.specialite', ['specialite_id' => $specialite->id])" :current="request()->routeIs('administrateur.candidats.candidatures.specialite')" wire:navigate class="py-2">
+                    @foreach (SpecialiteConcour::all() as $specialite)
+                        <flux:navlist.item  :href="route('administrateur.candidats.candidatures.specialite', ['specialite_concour_id' => $specialite->id])" :current="request()->routeIs('administrateur.candidats.candidatures.specialite')" wire:navigate class="py-2">
                             <div class="flex items-center gap-2">
                                 <x-icons.folder-open class="w-5 h-5" />
                                 <div class="flex justify-between w-full items-center">

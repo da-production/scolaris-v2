@@ -124,3 +124,8 @@ select:focus[data-flux-control] {
 .bg__teal{
     background-color: #33998b;
 }
+
+.rtl{
+    direction: rtl;
+    text-align: right;
+}

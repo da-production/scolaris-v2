@@ -32,13 +32,16 @@ class RegisterWire extends Component
 
     public function register()
     {
+        abort_if(!canCandidatUpdate(),403,
+            'Les inscriptions sont clôturées. Vous ne pouvez plus vous inscrire pour l\'exercice en cours.'
+        );
         /**
          * TODO Check if user can register using date clôture in admin panel
          */
         $validated = $this->validate([
             'email'         => ['required', 'string', 'email', 'max:255'],
-            'numero_bac'    => ['required', 'string', 'lowercase', 'max:255','min:8','max:8'],
-            'annee_bac'     => ['required', 'string', 'lowercase', 'max:255','min:4','max:4'],
+            'numero_bac'    => ['required', 'numeric','min:8','digits:8'],
+            'annee_bac'     => ['required', 'integer', 'max:' . date('Y')],
             'password'      => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
 

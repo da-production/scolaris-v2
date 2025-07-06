@@ -66,6 +66,9 @@
                                         <p class="block text-sm text-slate-800">
                                             AR: {{ $specialite->name_ar }}
                                         </p>
+                                        <p class="block text-sm text-slate-800">
+                                            Coefficient: {{ $specialite->coefficient }}
+                                        </p>
                                     </td>
                                     <td class="p-4 border-b border-slate-200">
                                         <p class=" text-sm text-slate-800 flex gap-2 items-center">
@@ -134,6 +137,7 @@
             </flux:select>
             <flux:input wire:model="name_fr" :label="__('Lebelle FR')" type="text" />
             <flux:input wire:model="name_ar" :label="__('Lebelle AR')" type="text" />
+            <flux:input wire:model="coefficient" :label="__('coefficient')" type="text" />
             <div class="p-4 max-w-xl flex gap-2  items-center">
                 <label for="is_active">{{ __('Activer') }}</label>
                 <input wire:model="is_active" id="is_active" type="checkbox" />
