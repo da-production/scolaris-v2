@@ -7,11 +7,59 @@
                     <h3 class="text-lg font-semibold ml-3 text-slate-800">
                         Gestion des <b>Candidatures</b>
                     @if ($specialite)
-                        <span class="text-sm text-slate-500">{{ $specialite->code }} - {{ $specialite->name_fr }}</span>
+                        <span class=" text-blue-800 text-lg underline"> : ({{ $specialite->code }}) - {{ $specialite->name_fr }}</span>
                     @endif
                     </h3>
-                    <p class="text-slate-500 mb-5 ml-3"> modifiez et gérez les parametres des classification.</p>
+                    <p class="text-slate-500 mb-5 ml-3"> Suivez, évaluez et gérez efficacement les candidatures reçues.</p>
                 </div>
+                
+                @if (!$bySpecialite)
+                    <div class="w-full flex gap-2 mb-2">
+                        <flux:input wire:model.live.debounce.1000="nom" :placeholder="__('Nom')" type="text" />
+                        <flux:input wire:model.live.debounce.1000="prenom" :placeholder="__('Prénom')" type="text" />
+                        <flux:select wire:model.change="domain_id" placeholder="domaines">
+                            <option>-- Domaines --</option>
+                            @foreach ($domaines as $domaine)
+                                <flux:select.option value="{{ $domaine->id }}">{{ $domaine->name_fr }}</flux:select.option>
+                            @endforeach
+                        </flux:select>
+                        <flux:select wire:model.change="filiere_id" placeholder="filieres">
+                            <flux:select.option>Filieres</flux:select.option>
+                            @foreach ($filieres as $filiere)
+                                <flux:select.option value="{{ $filiere->id }}">{{ $filiere->name_fr }}</flux:select.option>
+                            @endforeach
+                        </flux:select>
+                        <flux:select wire:model.change="specialite_concour_id" placeholder="specialites">
+                            <flux:select.option>Specialites</flux:select.option>
+                            @foreach ($specialites as $specialite)
+                                <flux:select.option value="{{ $specialite->id }}">{{ $specialite->code }} - {{ $specialite->name_fr }}</flux:select.option>
+                            @endforeach
+                        </flux:select>
+                        <flux:select wire:model.change="specialite_concour_id" placeholder="specialites">
+                            <flux:select.option>Specialites concours</flux:select.option>
+                            @foreach ($specialiteConcours as $sc)
+                                <flux:select.option value="{{ $sc->id }}">{{ $sc->code }} - {{ $sc->name_fr }}</flux:select.option>
+                            @endforeach
+                        </flux:select>
+                        <flux:select wire:model.change="decision" placeholder="Decision">
+                            <flux:select.option>Decisions</flux:select.option>
+                            @foreach (App\CandidatureStatusEnum::cases() as $status)
+                                <flux:select.option value="{{ $status->value }}">{{ $status->name }}</flux:select.option>
+                            @endforeach
+                        </flux:select>
+                        <flux:select wire:model.change="orderBy" placeholder="order">
+                            <flux:select.option>Order by</flux:select.option>
+                            <flux:select.option value="moyenne">moyenne</flux:select.option>
+                            <flux:select.option value="decision">decision</flux:select.option>
+                        </flux:select>
+                        <flux:select wire:model.change="orderDirection" placeholder="order direction">
+                            <flux:select.option>Order direction</flux:select.option>
+                            <flux:select.option value="ASC">ascendant</flux:select.option>
+                            <flux:select.option value="DESC">descendant</flux:select.option>
+                        </flux:select>
+                    </div>
+                    
+                @endif
                 <div class="relative  flex flex-col w-full text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left table-auto min-w-max">

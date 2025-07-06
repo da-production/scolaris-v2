@@ -49,7 +49,8 @@
                     Choisir un exercice
                     </label>
                     <select id="exercice" wire:model.change="exercice" class="w-full border border-gray-300 rounded-lg p-2 text-sm text-gray-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    <option disabled selected>-- Sélectionner un exercice --</option>
+                        <option  selected>-- Sélectionner un exercice --</option>
+                
                     @foreach ($exercices as $exercice)
                         <option value="{{ $exercice->annee }}">{{ $exercice->annee }}</option>
                         

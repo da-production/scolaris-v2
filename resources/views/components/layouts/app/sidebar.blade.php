@@ -168,7 +168,15 @@
             </flux:dropdown>
         </flux:header>
 
-        
+        @use('App\Models\Exercice')
+        @php
+            $is_closed = Exercice::where('annee', auth()->user()->exercice)->pluck('is_closed')->first();
+        @endphp
+        @if ($is_closed)
+            <div class="bg-red-100 border-b border-red-400 text-red-700 px-4 py-3  relative" role="alert">
+                <strong class="font-bold">Vous travailler dans un exercice clôture</strong>
+            </div>
+        @endif
         {{ $slot }}
 
 
