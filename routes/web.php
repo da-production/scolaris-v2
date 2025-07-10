@@ -6,6 +6,7 @@ use App\Livewire\Candidat\ProfileWire;
 use App\Livewire\Candidat\RegisterWire;
 use App\Livewire\CandidatsWire;
 use App\Livewire\CandidaturesWire;
+use App\Livewire\CandidatureWire as LivewireCandidatureWire;
 use App\Livewire\CandidatWire;
 use App\Livewire\ClassificationWire;
 use App\Livewire\CreateExerciseWire;
@@ -80,6 +81,7 @@ Route::prefix('administrateur')
         Route::get('/', CandidatsWire::class)->name('index');
         Route::get('/detail/{candidat}', CandidatWire::class)->name('show');
         Route::get('/candidatures',CandidaturesWire::class)->name('candidatures');
+        Route::get('/candidatures/{candidature}',LivewireCandidatureWire::class)->name('candidature.detail');
         Route::get('/candidatures/specialite/{specialite_concour_id}',CandidaturesWire::class)->name('candidatures.specialite');
     });
     // options resources

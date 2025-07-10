@@ -30,6 +30,16 @@ enum CandidatureStatusEnum:string
         };
     }
 
+    public function color(): string
+    {
+        return match($this) {
+            self::EN_ATTENTE => 'bg-yellow-100 text-yellow-800',
+            self::APPROUVE => 'bg-green-100 text-green-800',
+            self::REJETE => 'bg-red-100 text-red-800',
+            self::NON_CLASSE => 'bg-gray-100 text-gray-800',
+        };
+    }
+
     public static function default(): self
     {
         return self::EN_ATTENTE;

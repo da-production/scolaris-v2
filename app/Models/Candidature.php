@@ -30,6 +30,10 @@ class Candidature extends Model
         'etablissement_diplome',
     ];
 
+    public function domain(){
+        return $this->belongsTo(Domain::class);
+    }
+
     public function candidat(){
         return $this->belongsTo(Candidat::class);
     }
@@ -49,6 +53,16 @@ class Candidature extends Model
     public function specialite_concour()
     {
         return $this->belongsTo(SpecialiteConcour::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
+
+    public function document()
+    {
+        return $this->hasOne(Document::class)->latestOfMany();
     }
 
     protected $casts = [

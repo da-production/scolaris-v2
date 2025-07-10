@@ -30,8 +30,8 @@ class MotifWire extends Component
 
     protected function store(){
         $this->validate([
-            'name_fr'      => ['required','min:10','max:255'],
-            'name_ar'      => ['required','min:10','max:255'],
+            'name_fr'      => ['required','min:1','max:255'],
+            'name_ar'      => ['required','min:1','max:255'],
             'is_visible'   => ['nullable','boolean'],
         ]);
 

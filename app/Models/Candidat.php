@@ -40,7 +40,7 @@ class Candidat extends Authenticatable
 
     public function candidature()
     {
-        return $this->belongsTo(Candidature::class);
+        return $this->hasOne(Candidature::class);
     }
 
     public function wilaya()
