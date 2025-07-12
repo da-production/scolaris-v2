@@ -3,13 +3,21 @@
         <div class="relative h-full flex-1  rounded-xl p-2 border border-neutral-200 dark:border-neutral-700">
             <div class="w-full h-full bg-white relative z-10 rounded-lg p-4 border">
                 <div class="w-full">
-                    <h3 class="text-lg font-semibold ml-3 text-slate-800">Gestion des <b>Specialite</b></h3>
+                    <h3 class="text-lg flex justify-between items-center font-semibold ml-3 text-slate-800">
+                        <div>Gestion des <b>Specialite</b></div>
+                        <flux:button variant="danger" class="flex flex-nowrap items-center gap-1" size="sm" wire:click="flushCache()">
+                            <x-icons.clear width="24" height="24" />
+                            <span>{{ __('Vider le cache') }}</span>
+                        </flux:button>
+                    </h3>
                     <p class="text-slate-500 mb-5 ml-3"> modifiez et gérez les parametres des Specialite.</p>
                 </div>
                 <div class="relative flex flex-col w-full text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
                     <table class="w-full text-left table-auto min-w-max">
                         <thead>
                             <tr>
+                                <th class="p-4 w-1 border-b border-slate-300 bg-slate-50">
+                                </th>
                                 <th class="p-4 border-b border-slate-300 bg-slate-50">
                                     <p class="block text-sm font-normal leading-none text-slate-500">
                                         ID / code
@@ -36,7 +44,8 @@
                                     </p>
                                 </th>
                                 <th class="p-4 border-b border-slate-300 bg-slate-50 w-11">
-                                    <div class="w-full flex justify-end">
+                                    <div class="w-full flex justify-end gap-1">
+                                        
                                         <flux:modal.trigger name="add-specialite-modal">
                                             <flux:button variant="primary" size="sm" x-data="" x-on:click.prevent="$dispatch('open-modal', 'add-specialite-modal')">
                                                 <x-icons.plus-circle width="24" height="24" />
@@ -47,10 +56,12 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody wire:sortable="updateOrder" wire:sortable.options="{ animation: 100 }">
                             @foreach ($specialites as $specialite)
-                                <tr class="hover:bg-slate-50">
-                                        
+                                <tr class="hover:bg-slate-50" wire:sortable.item="{{ $specialite->id }}" wire:key="specialite-{{ $specialite->id }}">
+                                    <td class="p-4 border-b border-slate-200">
+                                        <x-icons.drag class="cursor-grab focus:cursor-grabbing" width="28" height="28" wire:sortable.handle ></x-icons.drag>
+                                    </td>  
                                     <td class="p-4 border-b border-slate-200">
                                         <p class="block text-sm text-slate-800">
                                             {{ $specialite->id}} / {{ $specialite->code}}

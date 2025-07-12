@@ -2,8 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Actions\OrderItem;
 use App\Models\Domain;
 use Flux\Flux;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -20,16 +22,18 @@ class DomainWire extends Component
 
     public function render()
     {
-        $domains = Domain::orderBy('created_at', 'DESC')->get();
+        $domains = Domain::orderBy('order')->get();
         return view('livewire.domain-wire', compact('domains'));
     }
 
     public function save()
     {
         if (is_null($this->id)) {
-            return $this->store();
+            $this->store();
+            $this->flushCache();
         } else {
-            return $this->update();
+            $this->update();
+            $this->flushCache();
         }
     }
 
@@ -40,8 +44,6 @@ class DomainWire extends Component
             'description'  => ['nullable','max:255'],
             'is_active'   => ['nullable','boolean'],
         ]);
-
-        
 
         Domain::create($validate);
 
@@ -59,7 +61,6 @@ class DomainWire extends Component
         ]);
         Domain::where('id',$this->id)
         ->update($validate);
-
         $this->reset();
 
         Flux::modal('add-domain-modal')->close();
@@ -73,5 +74,18 @@ class DomainWire extends Component
         $this->is_active = $motif->is_active ? true : false;
         Flux::modal('add-domain-modal')->show();
 
+    }
+
+    public function flushCache(){
+        Cache::forget('domains');
+        Cache::flush('domain');
+    }
+
+    public function updateOrder($items){
+        OrderItem::handle(
+            $items,
+            Domain::class
+        );
+        $this->flushCache();
     }
 }

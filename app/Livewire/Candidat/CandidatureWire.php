@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Candidat;
 
+use App\ClassificationEnum;
 use App\Models\Candidature;
 use App\Models\Classification;
 use App\Models\Document;
@@ -11,6 +12,7 @@ use App\Models\Specialite;
 use App\Models\SpecialiteConcour;
 use App\TypeDiplomEnum;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -55,7 +57,11 @@ class CandidatureWire extends Component
     
 
     public function mount(){
+        /**
+         * Check if exercice is expired or not
+         */
         $this->loadInformation();
+        $this->loadFiles();
     }
 
     #[On('loadInformation')]
@@ -84,11 +90,14 @@ class CandidatureWire extends Component
             $this->specialites = Specialite::where('filiere_id',$candidature->filiere_id)
                 ->where('specialite_concour_id',$candidature->specialite_concour_id)
                 ->get();
-            
-            $this->files = Document::where('candidature_id',$this->id)
+        }
+    }
+
+    #[On('loadFiles')]
+    public function loadFiles(){
+        $this->files = Document::where('candidature_id',$this->id)
                 ->where('type','all')
                 ->get();
-        }
     }
 
     public function updated($field,$value){
@@ -97,22 +106,34 @@ class CandidatureWire extends Component
                 'domain_id' => ['exists:domains,id']
             ]);
             $this->reset('filieres','specialites');
-            $this->filieres = Filiere::where('domain_id',$value)->get();
+            $this->filieres = Cache::tags('domain')
+                ->rememberForever('filieres_by_domain_'.$value, function () use ($value) {
+                    return Filiere::where('domain_id',$value)->orderBy('order')->get();
+                });
         }
         if($field == 'specialite_concour_id'){
             $this->validate([
                 'specialite_concour_id' => ['exists:specialite_concours,id']
             ]);
             $this->reset('specialites');
-            $this->specialites = Specialite::where('filiere_id',$this->filiere_id)->where('specialite_concour_id',$value)->get();
+            $this->specialites = Cache::tags('specialite_concours_filiers')
+                ->rememberForever("specialites_by_specialite_concour_{$value}_{$this->filiere_id}", function () use ($value) {
+                    return Specialite::where('filiere_id',$this->filiere_id)->where('specialite_concour_id',$value)->get();
+                });
         }
         $this->saveFile();
     }
     public function render()
     {
-        $domains = Domain::where('is_active',true)->get();
-        $specialiteConcours = SpecialiteConcour::where('is_active',true)->get();
-        $classifications = Classification::all();
+        $domains = Cache::rememberForever('domains', function () {
+            return Domain::where('is_active',true)->orderBy('order')->get();
+        });
+        $specialiteConcours = Cache::rememberForever('specialite_concours', function () {
+            return SpecialiteConcour::where('is_active',true)->orderBy('order')->get();
+        });
+        $classifications = Cache::rememberForever('classifications', function () {
+            return Classification::all();
+        });
         return view('livewire.candidat.candidature-wire', compact('domains','specialiteConcours','classifications'));
     }
 
@@ -165,8 +186,10 @@ class CandidatureWire extends Component
     public function update(){
         $validate = $this->validateData();
         try{
+
             $classification = Classification::where("id",$this->classification_id)->pluck('moyen')->first();
             $coefficient_spec = Specialite::where("id",$this->specialite_id)->pluck('coefficient')->first();
+
             $moyenne = calculateAverage($classification, $coefficient_spec, $this->moyenne_semestres);
             Candidature::find($this->id)->update([
                 ...$validate,
@@ -213,7 +236,7 @@ class CandidatureWire extends Component
             'file_size'         => $size,
             // 'comments' => $this->comments,
         ]);
-        $this->dispatch('loadInformation'); // Rafraîchir le composant pour mettre à jour la liste des fichiers
+        $this->dispatch('loadFiles'); // Rafraîchir le composant pour mettre à jour la liste des fichiers
         session()->flash('success', 'Document uploaded successfully!');
         $this->reset(['file']);
     }
@@ -255,7 +278,7 @@ class CandidatureWire extends Component
 
             // Message de confirmation (optionnel)
             session()->flash('success', 'Fichier supprimé avec succès.');
-            $this->dispatch('loadInformation'); // pour notification front
+            $this->dispatch('loadFiles'); // pour notification front
         } catch (\Exception $e) {
             // Annuler la transaction
             DB::rollBack();

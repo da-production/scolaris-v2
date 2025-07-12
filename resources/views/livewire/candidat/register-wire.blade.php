@@ -11,6 +11,7 @@
                 </a>
                 {{-- <h1 class="block text-2xl font-bold text-gray-800 dark:text-white">Inscription</h1> --}}
             </div>
+            @include('components.alerts.rate-limite')
             @if (canCandidatUpdate())
                 
                 
@@ -87,12 +88,15 @@
                                 :placeholder="__('Confirm password')"
                             />
                         </div>
+                        @if (!$errors->has('rateErrorMessage'))
+                            
                         <!-- End Form Group -->
                         <div class="flex items-center justify-end">
                             <flux:button type="submit" variant="primary" class="w-full" :disabled="$processing">
                                 {{ __('Inscription') }}
                             </flux:button>
                         </div>
+                        @endif
                     </div>
                 </form>
                 <!-- End Form -->

@@ -186,13 +186,13 @@
                                             </div>
 
                                             <div>
-                                                <p class="font-medium text-gray-900">{{ $candidature->document->file_name }}</p>
-                                                <p class="text-sm text-gray-500">Type: {{ $candidature->document->file_extension }} | Taille: {{ convertSize($candidature->document->file_size) }}</p>
+                                                <p class="font-medium text-gray-900">{{ $candidature->document?->file_name }}</p>
+                                                <p class="text-sm text-gray-500">Type: {{ $candidature->document?->file_extension }} | Taille: {{ convertSize($candidature->document?->file_size) }}</p>
                                             </div>
                                             </div>
 
                                             <div class="flex flex-col items-center gap-2 ">
-                                                <button type="button" wire:click="download('{{ $candidature->document->id }}')"
+                                                <button type="button" wire:click="download('{{ $candidature->document?->id }}')"
                                                     class="w-full justify-center flex items-center px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded">
                                                     Afficher
                                                 </button>

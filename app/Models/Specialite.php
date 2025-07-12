@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Specialite extends Model
 {
     //
+    
+    use HasFactory;
     protected $fillable = [
         'code',
         'specialite_concour_id',
@@ -15,7 +18,8 @@ class Specialite extends Model
         'name_ar',
         'coefficient',
         'description',
-        'is_active'
+        'is_active',
+        'order',
     ];
 
     public function filiere()

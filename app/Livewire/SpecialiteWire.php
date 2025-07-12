@@ -2,11 +2,13 @@
 
 namespace App\Livewire;
 
+use App\Actions\OrderItem;
 use App\Models\Filiere;
 use App\Models\SousSpecialite;
 use App\Models\Specialite;
 use App\Models\SpecialiteConcour;
 use Flux\Flux;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -30,7 +32,7 @@ class SpecialiteWire extends Component
 
     public function render()
     {
-        $specialites = Specialite::with('specialiteConcour')->get();
+        $specialites = Specialite::with('specialiteConcour')->orderBy('order')->get();
         $cSpecialites = SpecialiteConcour::all();
         $filieres = Filiere::all();
         return view('livewire.specialite-wire', compact('specialites','filieres','cSpecialites'));
@@ -39,8 +41,10 @@ class SpecialiteWire extends Component
     public function save(){
         if(is_null($this->id)){
             $this->store();
+            $this->flushCache();
         }else{
             $this->update();
+            $this->flushCache();
         }
     }
     private function store(){
@@ -87,6 +91,11 @@ class SpecialiteWire extends Component
             session()->flash('error', 'An error occurred while updating the specialite: ' . $e->getMessage());
             return;
         }
+    }
+
+    public function flushCache(){
+        // Flush the cache 
+        Cache::flush('specialite_concours_filiers');
     }
 
     public function editSpecialite(Specialite $specialite){
@@ -208,5 +217,13 @@ class SpecialiteWire extends Component
         $this->reset();
         Flux::modal('display-sous-specialites-modal')->show();
         $this->sous_specialites = $specialite->sousSpecialites;
+    }
+
+    public function updateOrder($items){
+        OrderItem::handle(
+            $items,
+            Specialite::class
+        );
+        $this->flushCache();
     }
 }

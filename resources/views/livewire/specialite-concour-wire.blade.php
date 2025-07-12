@@ -10,6 +10,7 @@
                     <table class="w-full text-left table-auto min-w-max">
                         <thead>
                             <tr>
+                                <th class="p-4 w-1 border-b border-slate-300 bg-slate-50"></th>
                                 <th class="p-4 border-b border-slate-300 bg-slate-50">
                                     <p class="block text-sm font-normal leading-none text-slate-500">
                                         ID 
@@ -37,10 +38,12 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody wire:sortable="updateOrder" wire:sortable.options="{ animation: 100 }">
                             @foreach ($specialites as $specialite)
-                                <tr class="hover:bg-slate-50">
-                                        
+                                <tr class="hover:bg-slate-50"  wire:sortable.item="{{ $specialite->id }}" wire:key="specialite-{{ $specialite->id }}">
+                                    <td class="p-4 border-b border-slate-200">
+                                        <x-icons.drag class="cursor-grab focus:cursor-grabbing" width="28" height="28" wire:sortable.handle ></x-icons.drag>
+                                    </td>  
                                     <td class="p-4 border-b border-slate-200">
                                         <p class="block text-sm text-slate-800">
                                             {{ $specialite->id}}

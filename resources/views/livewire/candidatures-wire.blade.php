@@ -82,6 +82,11 @@
                                     </th>
                                     <th class="p-4 border-b border-slate-300 bg-slate-50">
                                         <p class="block text-sm font-normal leading-none text-slate-500">
+                                            Classification concour
+                                        </p>
+                                    </th>
+                                    <th class="p-4 border-b border-slate-300 bg-slate-50">
+                                        <p class="block text-sm font-normal leading-none text-slate-500">
                                             Decision
                                         </p>
                                     </th>
@@ -120,6 +125,11 @@
                                         <td class="p-4 border-b border-slate-200">
                                             <p class="block text-sm text-slate-800">
                                                 {{ $candidature->moyenne}}
+                                            </p>
+                                        </td>
+                                        <td class="p-4 border-b border-slate-200">
+                                            <p class="block text-sm text-slate-800">
+                                                {{ $candidature->classification_concour}}
                                             </p>
                                         </td>
                                         <td class="p-4 border-b border-slate-200">

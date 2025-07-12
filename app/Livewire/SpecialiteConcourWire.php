@@ -2,10 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Actions\OrderItem;
 use App\Models\Domain;
 use App\Models\Specialite;
 use App\Models\SpecialiteConcour;
 use Flux\Flux;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -22,7 +24,7 @@ class SpecialiteConcourWire extends Component
 
     public function render()
     {
-        $specialites = SpecialiteConcour::paginate();
+        $specialites = SpecialiteConcour::orderBy('order')->paginate();
         return view('livewire.specialite-concour-wire',compact('specialites'));
     }
 
@@ -30,8 +32,10 @@ class SpecialiteConcourWire extends Component
     {
         if(is_null($this->id)){
             $this->store();
+            $this->flushCache();
         }else{
             $this->update();
+            $this->flushCache();
         }
     }
 
@@ -73,13 +77,27 @@ class SpecialiteConcourWire extends Component
         ]);
 
         SpecialiteConcour::where('id', $this->id)->update($validate);
-
+        
         $this->reset();
         Flux::modal('add-specialite-concour-modal')->close();
+    }
+
+    public function flushCache(){
+        // Flush the cache 
+        Cache::forget('specialite_concours');
+        Cache::flush('specialite_concours_filiers');
     }
 
     public function clearForm(){
         Flux::modal('add-specialite-concour-modal')->close();
         $this->reset();
+    }
+
+    public function updateOrder($items){
+        OrderItem::handle(
+            $items,
+            SpecialiteConcour::class
+        );
+        $this->flushCache();
     }
 }

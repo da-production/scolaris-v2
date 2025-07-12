@@ -9,6 +9,6 @@ class Motif extends Model
     //
 
     protected $fillable = [
-        'name_fr', 'name_ar', 'is_visible'
+        'name_fr', 'name_ar', 'is_visible','order'
     ];
 }

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name_ar')->nullable();
             $table->string('description')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->unsignedInteger('order')->nullable();
             $table->timestamps();
         });
     }

@@ -20,6 +20,7 @@
         "lightningcss-linux-x64-gnu": "^1.29.1"
     },
     "devDependencies": {
+        "@wotz/livewire-sortablejs": "^1.0.0",
         "laravel-echo": "^2.1.4",
         "pusher-js": "^8.4.0"
     }

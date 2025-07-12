@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
         'guest.candidat' => RedirectIfCandidatAuthenticated::class,
         'auth.candidat' => AuthenticateCandidat::class,
+        'can.register' => \App\Http\Middleware\CanRegisterMiddleware::class,
     ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

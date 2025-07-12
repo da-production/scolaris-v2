@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->decimal('coefficient')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->unsignedInteger('order')->nullable();
             $table->timestamps();
         });
     }

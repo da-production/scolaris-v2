@@ -30,6 +30,7 @@ return new class extends Migration
             $table->decimal('moyenne_bac')->nullable();
             $table->string('type_diplome')->nullable();
             $table->string('annee_diplome')->nullable();
+            $table->string('classification_concour')->nullable();
             $table->string('etablissement_diplome')->nullable();
             $table->softDeletes();
             $table->timestamps();

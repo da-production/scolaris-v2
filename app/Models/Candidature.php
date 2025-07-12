@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\Casts\DecisionCast;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Candidature extends Model
 {
     //
+    use HasFactory;
 
     protected $fillable = [
         'candidat_id',
@@ -28,6 +30,7 @@ class Candidature extends Model
         'type_diplome',
         'annee_diplome',
         'etablissement_diplome',
+        'classification_concour',
     ];
 
     public function domain(){

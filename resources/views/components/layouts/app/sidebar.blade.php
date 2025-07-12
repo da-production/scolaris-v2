@@ -19,12 +19,14 @@
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+                    @canany(['view all candidats'])
                     <flux:navlist.item  :href="route('administrateur.candidats.index')" :current="request()->routeIs('administrateur.candidats.index')" wire:navigate >
                         <div class="flex items-center gap-2">
                             <x-icons.students class="w-5 h-5" />
                             {{ __('Candidats') }}
                         </div>
                     </flux:navlist.item>
+                    @endcanany
                     <flux:navlist.item :href="route('administrateur.candidats.candidatures')" :current="request()->routeIs('administrateur.candidats.candidatures')" wire:navigate>
                         <div class="flex items-center gap-2">
                             <x-icons.candidature class="w-5 h-5" />
@@ -61,11 +63,11 @@
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Settings')" class="grid">
                     <livewire:connected-user-wire />
-                    @hasAnyOf(['root', 'administrator'],['view options'])
+                    @canany(['view options'])
                         <flux:navlist.item icon="users" :current="Str::contains(Route::currentRouteName(), 'administrateur.options')" href="{{ route('administrateur.options.index') }}">
                             {{ __('Options') }}
                         </flux:navlist.item>
-                    @endhasAnyOf
+                    @endcanany
                     <flux:navlist.item icon="users" :current="Str::contains(Route::currentRouteName(), 'administrateur.utilisateurs')" href="{{ route('administrateur.utilisateurs.index') }}">
                     {{ __('UAC & RBAC') }}
                     </flux:navlist.item>

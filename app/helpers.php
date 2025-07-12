@@ -60,6 +60,23 @@ function imageToBase64($path)
     return "data:$mime;base64,$base64";
 }
 
+if( !function_exists('closeRegister')){
+    function closeRegister(){
+        $exercice = Cache::rememberForever('exercice', function () {
+            return Exercice::where('annee', now()->year)->first();
+        });
+        if(is_null($exercice)){
+            return false;
+        }
+        if($exercice->is_closed){
+            return false;
+        }
+        if(Carbon::parse($exercice->closed_at)->isPast()){
+            return false;
+        }
+        return true;
+    }
+}
 
 if( !function_exists('canCandidatUpdate')){
     function canCandidatUpdate(){

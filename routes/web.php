@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\CacheWire;
 use App\Livewire\Candidat\CandidatureWire;
 use App\Livewire\Candidat\LoginWire;
 use App\Livewire\Candidat\ProfileWire;
@@ -27,12 +28,13 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
 Route::get('/', HomeWire::class)->name('home');
+Route::get('/fermeture', \App\Livewire\ClosedSiteWire::class)->name('fermeture');
 Route::group([
     'middleware' => 'guest.candidat',
     'as' => 'guest.candidat.',
 ], function () {
     Route::get('candidat/connexion',LoginWire::class)->name('connexion');
-    Route::get('inscription',RegisterWire::class)->name('inscription');
+    Route::get('inscription',RegisterWire::class)->middleware('can.register')->name('inscription');
 
     // Route::get('candidat/forgot-password', ForgotPassword::class)->name('password.request');
     // Route::get('candidat/reset-password/{token}', ResetPassword::class)->name('password.reset');
@@ -78,27 +80,28 @@ Route::prefix('administrateur')
     Route::prefix('candidats')
     ->as('candidats.')
     ->group(function () {
-        Route::get('/', CandidatsWire::class)->name('index');
-        Route::get('/detail/{candidat}', CandidatWire::class)->name('show');
-        Route::get('/candidatures',CandidaturesWire::class)->name('candidatures');
-        Route::get('/candidatures/{candidature}',LivewireCandidatureWire::class)->name('candidature.detail');
-        Route::get('/candidatures/specialite/{specialite_concour_id}',CandidaturesWire::class)->name('candidatures.specialite');
+        Route::get('/', CandidatsWire::class)->name('index')->middleware(['can:view all candidats']);
+        Route::get('/detail/{candidat}', CandidatWire::class)->name('show')->middleware(['can:view candidat']);
+        Route::get('/candidatures',CandidaturesWire::class)->name('candidatures')->middleware(['can:view all candidatures']);
+        Route::get('/candidatures/{candidature}',LivewireCandidatureWire::class)->name('candidature.detail')->middleware(['can:view candidature']);
+        Route::get('/candidatures/specialite/{specialite_concour_id}',CandidaturesWire::class)->name('candidatures.specialite')->middleware(['can:view all candidatures','can:view candidatures']);
     });
     // options resources
     Route::prefix('options')
     ->as('options.')
     ->group(function () {
-        Route::get('/scolaris', ScolarisOptionWire::class)->name('index');
-        Route::get('/inscription', InscriptionOptionWire::class)->name('inscription');
-        Route::get('/classifications', ClassificationWire::class)->name('classifications');
-        Route::get('/domains', DomainWire::class)->name('domains');
-        Route::get('/specialites', SpecialiteWire::class)->name('specialites');
-        Route::get('/specialites-concours', SpecialiteConcourWire::class)->name('specialites.concours');
-        Route::get('/exercices', ExerciceWire::class)->name('exercices');
-        Route::get('/exercices/create', CreateExerciseWire::class)->name('exercices.create');
-        Route::get('/exercices/detail/{exercice:annee}', ShowExerciceWire::class)->name('exercices.show');
-        Route::get('/motifs', MotifWire::class)->name('motifs');
-        Route::get('/filieres', FiliereWire::class)->name('filieres');
+        Route::get('/scolaris', ScolarisOptionWire::class)->name('index')->middleware(['can:update apps options']);
+        Route::get('/inscription', InscriptionOptionWire::class)->name('inscription')->middleware(['can:view apps options']);
+        Route::get('/classifications', ClassificationWire::class)->name('classifications')->middleware(['can:view classifications']);
+        Route::get('/domains', DomainWire::class)->name('domains')->middleware(['can:view domaines']);
+        Route::get('/specialites', SpecialiteWire::class)->name('specialites')->middleware(['can:view specialites']);
+        Route::get('/specialites-concours', SpecialiteConcourWire::class)->name('specialites.concours')->middleware(['can:view specialites concour']);
+        Route::get('/exercices', ExerciceWire::class)->name('exercices')->middleware(['can:view exercices']);
+        Route::get('/exercices/create', CreateExerciseWire::class)->name('exercices.create')->middleware(['can:view exercices']);
+        Route::get('/exercices/detail/{exercice:annee}', ShowExerciceWire::class)->name('exercices.show')->middleware(['can:view exercices']);
+        Route::get('/motifs', MotifWire::class)->name('motifs')->middleware(['can:view motifs']);
+        Route::get('/filieres', FiliereWire::class)->name('filieres')->middleware(['can:view filieres']);
+        Route::get('/cache', CacheWire::class)->name('cache')->middleware(['can:delete caches app']);
     });
 
 });

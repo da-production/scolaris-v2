@@ -2,9 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Actions\OrderItem;
 use App\Models\Domain;
 use App\Models\Filiere;
 use Flux\Flux;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 
 class FiliereWire extends Component
@@ -17,16 +19,18 @@ class FiliereWire extends Component
 
     public function render()
     {
-        $filieres = Filiere::with('domain')->orderBy('created_at','DESC')->get();
+        $filieres = Filiere::with('domain')->orderBy('order')->get();
         $domains = Domain::all();
         return view('livewire.filiere-wire',compact('filieres','domains'));
     }
 
     public function save(){
         if(is_null($this->id)){
-            return $this->store();
+            $this->store();
+            $this->flushCache();
         }else{
-            return $this->update();
+            $this->update();
+            $this->flushCache();
         }
     }
 
@@ -60,6 +64,13 @@ class FiliereWire extends Component
         Flux::modal('add-filiere-modal')->close();
     }
 
+    public function flushCache(){
+        // Flush the cache 
+        Cache::forget('filiers');
+        Cache::flush('domain');
+        Cache::flush('specialite_concours_filiers');
+    }
+    
     public function editMotif(Filiere $motif){
         $this->id = $motif->id;
         $this->name_fr = $motif->name_fr;
@@ -77,5 +88,13 @@ class FiliereWire extends Component
 
     public function delete(Filiere $motif){
         $motif->delete();
+    }
+
+    public function updateOrder($items){
+        OrderItem::handle(
+            $items,
+            Filiere::class
+        );
+        $this->flushCache();
     }
 }

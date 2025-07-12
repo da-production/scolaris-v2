@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name_fr');
             $table->string('name_ar')->nullable();
             $table->boolean('is_visible')->default(true);
+            $table->unsignedInteger('order')->nullable();
             $table->timestamps();
         });
     }

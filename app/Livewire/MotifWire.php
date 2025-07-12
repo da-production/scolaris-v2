@@ -2,8 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Actions\OrderItem;
 use App\Models\Motif;
 use Flux\Flux;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class MotifWire extends Component
@@ -16,15 +19,17 @@ class MotifWire extends Component
 
     public function render()
     {
-        $motifs = Motif::all();
+        $motifs = Motif::orderBy('order')->get();
         return view('livewire.motif-wire', compact('motifs'));
     }
 
     public function save(){
         if(is_null($this->id)){
-            return $this->store();
+            $this->store();
+            $this->flushCache();
         }else{
-            return $this->update();
+            $this->update();
+            $this->flushCache();
         }
     }
 
@@ -78,5 +83,18 @@ class MotifWire extends Component
 
     public function delete(Motif $motif){
         $motif->delete();
+    }
+
+    public function flushCache(){
+        // Flush the cache 
+        Cache::forget('motifs');
+    }
+
+    public function updateOrder($items){
+        OrderItem::handle(
+            $items,
+            Motif::class
+        );
+        $this->flushCache();
     }
 }
