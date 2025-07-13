@@ -128,7 +128,7 @@ class CandidaturesWire extends Component
             });
             $candidatures = $query->limit(100)->get();
         }else{
-            $candidatures = $query->paginate(1);
+            $candidatures = $query->paginate(15);
         }
         
         return view('livewire.candidatures-wire',compact('candidatures'));

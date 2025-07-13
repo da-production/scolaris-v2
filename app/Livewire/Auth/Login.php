@@ -45,8 +45,9 @@ class Login extends Component
         /**
          * TODO:
          * 1- check crediential 
-         * 2- create otp code
-         * 3- redirect to page with token
+         * 2- check if is active or not
+         * 3- create otp code
+         * 4- redirect to page with token
          */
         $this->validate();
 

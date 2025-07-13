@@ -11,23 +11,37 @@
                     <div
                         class="w-full   dark:bg-gray-800 p-6 flex flex-col md:flex-row gap-6">
                         <!-- Image du candidat -->
-                        <div class="w-3/12">
+                        <div class="w-3/12 space-y-2">
                             <img src="{{ $this->profilePhotoUrl() }}" alt="Photo du candidat"
                                 class="w-full h-auto rounded-lg shadow-md object-cover">
                             {{-- <a  wire:navigate href="{{ route('administrateur.candidats.show', ['candidat' => $candidature->candidat->id]) }}"
                                 class="block mt-4 text-center text-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-4 py-2 rounded transition">
                                 Voir le candidat
                             </a> --}}
-                            <flux:modal.trigger name="decision-modal">
-                                <flux:button variant="primary" size="sm" x-data="" class="w-full" x-on:click.prevent="$dispatch('open-modal', 'decision-modal')">
-                                    <x-icons.plus-circle width="24" height="24" />
-                                    {{ __('Metre a jout la decision') }}
-                                </flux:button>
-                            </flux:modal.trigger>
+                            <div class="p-4 rounded-xl border text-xs text-center {{ CandidatureStatusEnum::from($candidature->decision)->color()}}">{{ CandidatureStatusEnum::from($candidature->decision)->description()}}</div>
+                            
+                            @canany(['set candidature decision'])
+                                @if($candidature->decision == 'EN_ATTENTE' || auth()->user()->can('reset candidature decision'))
+                                <flux:modal.trigger name="decision-modal">
+                                    <flux:button variant="primary" size="sm" x-data="" class="w-full" x-on:click.prevent="$dispatch('open-modal', 'decision-modal')">
+                                        <x-icons.pen width="16" height="16" />
+                                        {{ __('Émettre la décision') }}
+                                    </flux:button>
+                                </flux:modal.trigger>
+                                @endif
+                            @endcanany
                             <flux:modal name="decision-modal" :show="$errors->isNotEmpty()" focusable class="max-w-xl w-full">
-                                <form wire:submit="save" class="space-y-6">
+                                <form wire:submit="setDecision" class="space-y-6">
                                     <div>
-                                        <flux:heading size="lg">{{ __('Metre a jout la decision') }}</flux:heading>
+                                        <flux:heading size="lg">{{ __('Émettre la décision') }}</flux:heading>
+                                        <div class="max-w-xl mx-auto mt-6 p-4 border border-red-200 bg-red-50 text-red-700 rounded-lg shadow-sm">
+                                            <h2 class="text-lg font-semibold">Confirmation requise</h2>
+                                            <p class="mt-1 text-sm">
+                                                Vous êtes sur le point de <span class="font-medium">mettre à jour la décision</span>.
+                                                <br>
+                                                <strong class="text-red-800">Attention :</strong> une fois cette action effectuée, il ne sera plus possible de revenir en arrière.
+                                            </p>
+                                        </div>
 
                                     </div>
                                     <flux:select wire:model.change="decision" >
@@ -37,16 +51,17 @@
                                         @endforeach
                                     </flux:select>
 
-                                    @if ($decision == 'rejete')
-                                        <flux:select wire:model="motif" >
+                                    @if ($decision == 'REJETE')
+                                        <flux:select wire:model.change="motif" >
                                             <flux:select.option>Motifs</flux:select.option>
-                                            @foreach ($motifs as $motif)
-                                                <flux:select.option value="{{ $motif->id }}">{{ $motif->name_fr }}</flux:select.option>
+                                            @foreach ($motifs as $m)
+                                                <flux:select.option value="{{ $m->id }}">{{ $m->name_fr }}</flux:select.option>
                                             @endforeach
                                         </flux:select>
                                     @endif
-                                    @if ($motif == 'autre')
-                                        <flux:input wire:model="motif_autre" :label="__('Motif Autre')" type="text" />
+
+                                    @if ($motif == 5 && $decision == 'REJETE')
+                                        <flux:input wire:model="description" :label="__('Description')" type="text" />
                                     @endif
 
                                     <div class="flex justify-end space-x-2">
@@ -75,6 +90,7 @@
                                 >
                                     Information Candidat
                                 </label>
+                                @canany(['view candidature files'])
                                 <label
                                     @click="activeTab = 2"
                                     class="cursor-pointer px-4 py-2 font-medium text-sm transition duration-200 border-b-2"
@@ -84,6 +100,7 @@
                                 >
                                     Fichiers téléversés
                                 </label>
+                                @endcanany
                             </div>
 
 

@@ -149,7 +149,7 @@
                                         </td>
                                         <td class="p-4 border-b border-slate-200">
                                             <div class="flex justify-end text-sm text-slate-800">
-                                                <a >
+                                                <a href="{{ route('administrateur.candidats.candidature.detail', $candidature->id) }}">
                                                     <flux:button variant="primary" size="sm" type="button">
                                                         Détail
                                                     </flux:button>
@@ -163,7 +163,7 @@
                         </table>
                     </div>
                     @if (!$bySpecialite)
-                        <div class="my-5">
+                        <div class="my-5 mx-4">
                             {{ $candidatures->links() }}
                         </div>
                     @endif
