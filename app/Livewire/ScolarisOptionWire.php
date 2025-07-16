@@ -22,7 +22,8 @@ class ScolarisOptionWire extends Component
         return view('livewire.scolaris-option-wire');
     }
 
-    public function updated(){
+    public function updated($fields, $v){
+        dd($fields, $v);
         try{
             DB::beginTransaction();
             foreach ($this->form as $name => $value) {

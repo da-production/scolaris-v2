@@ -31,6 +31,6 @@ class DatabaseSeeder extends Seeder
         // SpecialiteConcour::factory(5)->create();  // Creates 10 specialite concours
         // Specialite::factory(80)->create();  // Creates 10 specialites
         // Candidat::factory(50)->create();
-        Candidature::factory(50)->create();
+        Candidature::factory(250)->create();
     }
 }

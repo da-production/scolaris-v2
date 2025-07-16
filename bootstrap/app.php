@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         'guest.candidat' => RedirectIfCandidatAuthenticated::class,
         'auth.candidat' => AuthenticateCandidat::class,
         'can.register' => \App\Http\Middleware\CanRegisterMiddleware::class,
+        'hasAnyPermission' =>\App\Http\Middleware\HasAnyPermission::class,
     ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

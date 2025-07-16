@@ -86,6 +86,9 @@
                             />
 
                         </div>
+                        <div>
+                            <a wire:navigate href="" class="text-sm text-gray-600 underline">Mot de passe oublie ?</a>
+                        </div>
                         <!-- End Form Group -->
                         <div class="flex items-center justify-end">
                             <flux:button type="submit" variant="primary" class="w-full" :disabled="$processing">

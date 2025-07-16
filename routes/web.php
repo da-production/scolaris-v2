@@ -84,7 +84,7 @@ Route::prefix('administrateur')
         Route::get('/detail/{candidat}', CandidatWire::class)->name('show')->middleware(['can:view candidat']);
         Route::get('/candidatures',CandidaturesWire::class)->name('candidatures')->middleware(['can:view all candidatures']);
         Route::get('/candidatures/{candidature}',LivewireCandidatureWire::class)->name('candidature.detail')->middleware(['can:view candidature']);
-        Route::get('/candidatures/specialite/{specialite_concour_id}',CandidaturesWire::class)->name('candidatures.specialite')->middleware(['can:view all candidatures','can:view candidatures']);
+        Route::get('/candidatures/specialite/{specialite_concour_id}',CandidaturesWire::class)->name('candidatures.specialite')->middleware(['hasAnyPermission:view all candidatures, view candidatures']);
     });
     // options resources
     Route::prefix('options')

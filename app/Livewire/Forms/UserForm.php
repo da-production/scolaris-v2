@@ -3,6 +3,7 @@
 namespace App\Livewire\Forms;
 
 use App\Models\User;
+use App\Rules\EmailDomain;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
@@ -29,7 +30,7 @@ class UserForm extends Form
     {
         return [
             'name'      => ['required','max:255',Rule::unique('users','name')->ignore($this->user?->id)],
-            'email'     => ['required','email',Rule::unique('users','email')->ignore($this->user?->id)],
+            'email'     => ['required','email',Rule::unique('users','email')->ignore($this->user?->id),new EmailDomain()],
             'password'  => [is_null($this->user) ? 'required' : 'nullable','min:8','max:255','confirmed', Rules\Password::defaults()]
         ];
     }
