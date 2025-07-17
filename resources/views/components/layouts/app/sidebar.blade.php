@@ -36,7 +36,7 @@
                 </flux:navlist.group>
 
                 <flux:navlist.group :heading="__('Candidatures par specialite')" class="grid">
-                    @foreach (SpecialiteConcour::all() as $specialite)
+                    @foreach (SpecialiteConcour::orderBy('order')->get() as $specialite)
                         <flux:navlist.item  :href="route('administrateur.candidats.candidatures.specialite', ['specialite_concour_id' => $specialite->id])" :current="request()->routeIs('administrateur.candidats.candidatures.specialite')" wire:navigate class="py-2">
                             <div class="flex items-center gap-2">
                                 <x-icons.folder-open class="w-5 h-5" />

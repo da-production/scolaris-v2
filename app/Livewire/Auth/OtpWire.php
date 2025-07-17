@@ -56,11 +56,16 @@ class OtpWire extends Component
             'email' => $otp->email,
         ],'Login with OTP');
 
-        if(config('app.enable_reverb')){
-            Broadcast::event(new UserAuthEvent(Auth::user()->id));
-        }
+        $this->broadcastLogoutEvent();
+        
         Session::regenerate();
         // login user
         return redirect()->route('settings.profile');
+    }
+
+    private function broadcastLogoutEvent(){
+        if(config('app.enable_reverb')){
+            Broadcast::event(new UserAuthEvent(Auth::user()->id));
+        }
     }
 }

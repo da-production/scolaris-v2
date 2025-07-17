@@ -23,7 +23,9 @@ class ScolarisOptionWire extends Component
     }
 
     public function updated($fields, $v){
-        dd($fields, $v);
+        if($fields == "form.autorized_emails"){
+            $this->form["autorized_emails"] = preg_replace('/\s+/', '', $this->form["autorized_emails"]);
+        }
         try{
             DB::beginTransaction();
             foreach ($this->form as $name => $value) {

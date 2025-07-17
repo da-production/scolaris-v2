@@ -27,6 +27,8 @@ class CandidaturesWire extends Component
     public $specialite;
     public $bySpecialite = false;
 
+    public $rejete;
+
     protected $queryString = [
         'specialite_concour_id',
         'domain_id',
@@ -37,6 +39,7 @@ class CandidaturesWire extends Component
         'orderBy' => [ 'as' => 'order_by', 'rules' => 'nullable|in:moyenne,created_at,decision'],
         'orderDirection' => ['as' => 'order_direction', 'default' => 'DESC', 'rules' => 'nullable|in:ASC,DESC'],
         'decision' => ['as' => 'decision'],
+        'rejete'    => ['as'=>'status','rules'=>'nullable|boolean']
     ];
 
     public $domaines;
@@ -119,6 +122,9 @@ class CandidaturesWire extends Component
         })
         ->when($this->decision && in_array($this->decision, array_column(CandidatureStatusEnum::cases(), 'value')), function ($query) {
             $query->where('decision', $this->decision);
+        })
+        ->when($this->rejete, function($query){
+            return $query->where('decision','REJETE');
         })
         ->where('exercice',auth()->user()->exercice)
         ->with('candidat');

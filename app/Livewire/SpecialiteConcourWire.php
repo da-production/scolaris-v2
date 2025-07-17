@@ -8,6 +8,7 @@ use App\Models\Specialite;
 use App\Models\SpecialiteConcour;
 use Flux\Flux;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -99,5 +100,15 @@ class SpecialiteConcourWire extends Component
             SpecialiteConcour::class
         );
         $this->flushCache();
+    }
+
+    public function delete(SpecialiteConcour $specialite){
+        try{
+            $specialite->delete();
+            session()->flash('message', 'Specialite deleted successfully.');
+        }catch(\Exception $e){
+            Log::error('Error deleting specialite: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while deleting the specialite: ' . $e->getMessage());
+        }
     }
 }

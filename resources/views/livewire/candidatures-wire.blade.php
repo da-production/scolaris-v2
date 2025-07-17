@@ -5,7 +5,7 @@
             <div class="w-full h-full bg-white relative z-10 rounded-lg p-4 border">
                 <div class="w-full">
                     <h3 class="text-lg font-semibold ml-3 text-slate-800">
-                        Gestion des <b>Candidatures</b>
+                        Gestion des <b>Candidatures ({{ $candidatures->count() }})</b>
                     @if ($specialite)
                         <span class=" text-blue-800 text-lg underline"> : ({{ $specialite->code }}) - {{ $specialite->name_fr }}</span>
                     @endif
@@ -58,7 +58,13 @@
                             <flux:select.option value="DESC">descendant</flux:select.option>
                         </flux:select>
                     </div>
-                    
+                @else   
+                    <div class="w-full flex gap-2 mb-2">
+                            <label for="rejete" class="px-4 py-2 max-w-xl flex gap-2 border bg-red-500 border-red-600 text-white rounded-lg text-xs cursor-pointer items-center">
+                                {{ __('Afficher les rejetes') }}
+                                <input wire:model.change="rejete" id="rejete" type="checkbox" />
+                            </label>
+                    </div>
                 @endif
                 <div class="relative  flex flex-col w-full text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
                     <div class="overflow-x-auto">

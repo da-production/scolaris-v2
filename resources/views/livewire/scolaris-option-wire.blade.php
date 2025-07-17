@@ -9,11 +9,11 @@
                 <div class="relative flex flex-col w-full text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
                     <div class="max-w-xl">
                         <div class="p-4">
-                            <flux:input wire:model.live="form.autorized_emails" :label="__('Email autorizer')"
-                                type="number" />
+                            <flux:input wire:model.live.debounce.2000="form.autorized_emails" :label="__('Email autorizer')"
+                                type="text" />
                         </div>
                         <div class="p-4">
-                            <flux:input wire:model.live="form.max" :label="__('Quotas candidats a retenir')"
+                            <flux:input wire:model.live.debounce.2000="form.max_candidatures_by_specialite" :label="__('Quotas candidats a retenir')"
                                 type="number" />
                         </div>
                     </div>

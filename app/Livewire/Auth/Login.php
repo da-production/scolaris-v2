@@ -103,9 +103,8 @@ class Login extends Component
             'remember' => $this->remember
         ],'Login without OTP');
 
-        if(config('app.enable_reverb')){
-            Broadcast::event(new UserAuthEvent(Auth::user()->id));
-        }
+        // broadcast the logout event to logout the user if are connected with same user list
+        $this->broadcastLogoutEvent();
 
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
@@ -143,5 +142,10 @@ class Login extends Component
         return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
     }
 
+    private function broadcastLogoutEvent(){
+        if(config('app.enable_reverb')){
+            Broadcast::event(new UserAuthEvent(Auth::user()->id));
+        }
+    }
     
 }
