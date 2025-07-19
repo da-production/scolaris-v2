@@ -6,8 +6,7 @@ use App\Actions\OTPAction;
 use App\Events\OtpEvent;
 use App\Jobs\SendOtpEmail;
 
-use App\Mail\OtpMail;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class OtpListener
 {
