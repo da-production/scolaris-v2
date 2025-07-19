@@ -43,21 +43,22 @@ if( !function_exists('calculateAverage')){
     }
 }
 
+if( !function_exists('closeRegister')){
+    function imageToBase64($path)
+    {
+        if(is_null($path) || empty($path)) {
+            return null;
+        }
+        if (!Storage::disk('private')->exists($path)) {
+            return null;
+        }
 
-function imageToBase64($path)
-{
-    if(is_null($path) || empty($path)) {
-        return null;
+        $file = Storage::disk('private')->get($path);
+        $mime = Storage::disk('private')->mimeType($path);
+        $base64 = base64_encode($file);
+
+        return "data:$mime;base64,$base64";
     }
-    if (!Storage::disk('private')->exists($path)) {
-        return null;
-    }
-
-    $file = Storage::disk('private')->get($path);
-    $mime = Storage::disk('private')->mimeType($path);
-    $base64 = base64_encode($file);
-
-    return "data:$mime;base64,$base64";
 }
 
 if( !function_exists('closeRegister')){
