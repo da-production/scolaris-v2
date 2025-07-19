@@ -53,7 +53,7 @@ class Login extends Component
 
         $this->ensureIsNotRateLimited();
 
-        // return $this->LoginWithOtp();
+        return $this->LoginWithOtp();
 
         return $this->LoginWithoutOtp();
     }
@@ -61,7 +61,7 @@ class Login extends Component
         $user = User::where('email',$this->email)->first();
         if(!is_null($user) && Hash::check($this->password,$user->password)){
             try{
-                $otp    = random_int(000000,99999);
+                $otp    = random_int(000000,999999);
                 $token  = Str::random(16);
                 Otp::create([
                     'user_id'   => $user->id,
@@ -70,10 +70,12 @@ class Login extends Component
                     'remember'  => $this->remember
                 ]);
 
-                LogAction::store(request(),$user->id,'attempt to login','User',[
+                LogAction::store(request(),$user->id,'Login','User',[
                     'email' => $this->email,
                     'remember' => $this->remember
                 ],'attempt to login with OTP');
+                
+                // run the job
                 event(new OtpEvent($otp,$token,$user));
 
                 // redirect to otp page with token
@@ -86,9 +88,11 @@ class Login extends Component
             
         }else{
             // display error message
+            $this->addError('email','user not found');
             return;
         }
     }
+
     protected function LoginWithoutOtp(){
         if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
             RateLimiter::hit($this->throttleKey());

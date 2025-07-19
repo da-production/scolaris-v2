@@ -2,10 +2,11 @@
 
 namespace App\Listeners;
 
+use App\Actions\OTPAction;
 use App\Events\OtpEvent;
+use App\Jobs\SendOtpEmail;
+
 use App\Mail\OtpMail;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 
 class OtpListener
@@ -23,8 +24,11 @@ class OtpListener
      */
     public function handle(OtpEvent $event): void
     {
-        //
-        $url = route('otp')."?token=".$event->token;
-        Mail::to($event->user?->email)->send(new OtpMail($event->otp,$url));
+        // Run the job if enable else run as sync
+        if(config('app.otp_cronjob')){
+            SendOtpEmail::dispatch($event);
+        }else{
+            OTPAction::send($event);
+        }
     }
 }

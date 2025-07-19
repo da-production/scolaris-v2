@@ -9,6 +9,6 @@ class Otp extends Model
     //
 
     protected $fillable = [
-        'user_id', 'code', 'token'
+        'user_id','candidat_id', 'code', 'token'
     ];
 }

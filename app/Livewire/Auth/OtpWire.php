@@ -48,7 +48,7 @@ class OtpWire extends Component
         $this->validate([
             'code'       => ['required','exists:otps,code'],
         ]);
-
+        $this->code = preg_replace('/\s+/', '', $this->code);
         $otp = Otp::where('code',$this->code)->first();
         Auth::loginUsingId($otp->user_id,$this->remember);
         Otp::where('user_id',$otp->user_id)->delete();
