@@ -121,6 +121,16 @@
                         <span>{{ __('SMTP') }}</span>
                     </div>
                 </flux:navlist.item>
+                <flux:navlist.item :href="route('administrateur.options.jobs')" 
+                @class([
+                    'active' => request()->routeIs('administrateur.options.jobs'),
+                ])
+                wire:navigate>
+                    <div class="flex gap-2 items-center">
+                        <x-icons.roles class="size-4" />
+                        <span>{{ __('Failed Jobs') }}</span>
+                    </div>
+                </flux:navlist.item>
             </flux:navlist>
         </div>
 

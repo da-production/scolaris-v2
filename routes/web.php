@@ -13,6 +13,7 @@ use App\Livewire\ClassificationWire;
 use App\Livewire\CreateExerciseWire;
 use App\Livewire\DomainWire;
 use App\Livewire\ExerciceWire;
+use App\Livewire\FailedJobsWire;
 use App\Livewire\FiliereWire;
 use App\Livewire\HomeWire;
 use App\Livewire\InscriptionOptionWire;
@@ -104,6 +105,7 @@ Route::prefix('administrateur')
         Route::get('/filieres', FiliereWire::class)->name('filieres')->middleware(['can:view filieres']);
         Route::get('/cache', CacheWire::class)->name('cache')->middleware(['can:delete caches app']);
         Route::get('/smtp', SmtpOptionWire::class)->name('smtp')->middleware(['can:update smtp']);
+        Route::get('/jobs', FailedJobsWire::class)->name('jobs')->middleware(['can:update jobs']);
     });
 
 });
