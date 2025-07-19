@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Option;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -39,6 +40,7 @@ class ScolarisOptionWire extends Component
                 'type' => 'success',
                 'message' => 'Les options ont été mises à jour avec succès.'
             ]);
+            Cache::forget('options');
         }catch (\Exception $e){
             DB::rollBack();
             $this->dispatch('notify', [
