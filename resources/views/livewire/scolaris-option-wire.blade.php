@@ -17,6 +17,42 @@
                                 type="number" />
                         </div>
                     </div>
+
+                    <h4 class="text-base text-slate-700 my-3 font-bold underline ml-3">Configuration Serveur Mail (SMTP)</h4>
+                    <div class="max-w-xl">
+                        <div class="p-4">
+                            <flux:input wire:model.live.debounce.2000="form.smtp_mailer" :label="__('Mailer')"
+                                type="text" />
+                        </div>
+                        <div class="p-4">
+                            <flux:input wire:model.live.debounce.2000="form.smtp_host" :label="__('Host')"
+                                type="text" />
+                        </div>
+                        <div class="p-4">
+                            <flux:input wire:model.live.debounce.2000="form.smtp_port" :label="__('Port')"
+                                type="text" />
+                        </div>
+                        <div class="p-4">
+                            <flux:input wire:model.live.debounce.2000="form.smtp_encryption" :label="__('Encryption')"
+                                type="text" />
+                        </div>
+                        <div class="p-4">
+                            <flux:input wire:model.live.debounce.2000="form.smtp_username" :label="__('Username')"
+                                type="text" />
+                        </div>
+                        <div class="p-4">
+                            <flux:input wire:model.live.debounce.2000="form.smtp_password" :label="__('Password')"
+                                type="text" />
+                        </div>
+                        <div class="p-4">
+                            <flux:input wire:model.live.debounce.2000="form.smtp_sender" :label="__('Sender email')"
+                                type="text" />
+                        </div>
+                        <div class="p-4">
+                            <flux:input wire:model.live.debounce.2000="form.smtp_name" :label="__('Sender name')"
+                                type="text" />
+                        </div>
+                    </div>
                 </div>
 
             </div>
