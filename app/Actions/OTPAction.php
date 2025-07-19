@@ -14,8 +14,8 @@ class OTPAction{
         
         try{
             $options = [];
-            $getOptionsFromCache = Cache::rememberForever('options', function(){
-                return Option::all();
+            $getOptionsFromCache = Cache::rememberForever('smtp', function(){
+                return Option::where('model_type', 'smtp')->get();
             });
 
             foreach ($getOptionsFromCache as $option) {

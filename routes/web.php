@@ -22,6 +22,7 @@ use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\ShowExerciceWire;
+use App\Livewire\SmtpOptionWire;
 use App\Livewire\SpecialiteConcourWire;
 use App\Livewire\SpecialiteWire;
 use Illuminate\Support\Facades\Route;
@@ -102,6 +103,7 @@ Route::prefix('administrateur')
         Route::get('/motifs', MotifWire::class)->name('motifs')->middleware(['can:view motifs']);
         Route::get('/filieres', FiliereWire::class)->name('filieres')->middleware(['can:view filieres']);
         Route::get('/cache', CacheWire::class)->name('cache')->middleware(['can:delete caches app']);
+        Route::get('/smtp', SmtpOptionWire::class)->name('smtp')->middleware(['can:update smtp']);
     });
 
 });
