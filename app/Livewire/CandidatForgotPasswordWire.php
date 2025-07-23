@@ -9,8 +9,8 @@ use App\Models\Option;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 #[Layout('components.layouts.guest')]
@@ -21,6 +21,7 @@ class CandidatForgotPasswordWire extends Component
     public $email;
 
     public $message;
+    public $error;
 
     public function render()
     {
@@ -29,7 +30,7 @@ class CandidatForgotPasswordWire extends Component
 
     public function send()
     {
-        $this->reset('message');
+        $this->reset('message','error');
         $this->validate([
             'email'         => ['required', 'string', 'email', 'max:255'],
             'numero_bac'    => ['required', 'numeric','digits:8'],
@@ -50,29 +51,35 @@ class CandidatForgotPasswordWire extends Component
         }
         
         // store token in database
-        $token = Str::random();
-        DB::table('password_reset_tokens')->where('email', $this->email)->delete();
-        DB::table('password_reset_tokens')->insert([
-            'guard'     => 'candidat',
-            'email'     => $this->email,
-            'token'     => $token,
-            'created_at'=> now(),
-        ]);
-        // Password::sendResetLink($this->only('email'));
-        // todo make it option to enable job
-        $getOptions = Cache::rememberForever('options_inscription', function(){
-            return Option::where('model_type', 'inscription')->get();
-        });
-        foreach ($getOptions as $option) {
-            $options[$option->name] = $option->value;
+        try{
+            $token = Str::random();
+            DB::beginTransaction();
+            DB::table('password_reset_tokens')->where('email', $this->email)->delete();
+            DB::table('password_reset_tokens')->insert([
+                'guard'     => 'candidat',
+                'email'     => $this->email,
+                'token'     => $token,
+                'created_at'=> now(),
+            ]);
+            $getOptions = Cache::rememberForever('options_inscription', function(){
+                return Option::where('model_type', 'inscription')->get();
+            });
+            foreach ($getOptions as $option) {
+                $options[$option->name] = $option->value;
+            }
+            $options = collect($options);
+            if(config('app.cronjob') && $options->get('can_use_cronjob_candidat')){
+                $this->sendCodeWithJob($token);
+            }else{
+                $this->sendCodeWithoutJob($token);
+            }
+            $this->message = 'Un lien a été envoyé à votre boîte email.';
+            DB::commit();
+        }catch(\Exception $e){
+            Log::error($e->getMessage());
+            $this->error = "Une erreur s’est produite. Veuillez réessayer.";
+            DB::rollBack();
         }
-        $options = collect($options);
-        if($options->get('can_use_cronjob_candidat')){
-            $this->sendCodeWithJob($token);
-        }else{
-            $this->sendCodeWithoutJob($token);
-        }
-        $this->message = 'un lien a ete envoye a votre boite email';
 
     }
 

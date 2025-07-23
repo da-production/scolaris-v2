@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         'auth.candidat' => AuthenticateCandidat::class,
         'can.register' => \App\Http\Middleware\CanRegisterMiddleware::class,
         'hasAnyPermission' =>\App\Http\Middleware\HasAnyPermission::class,
+        'can.candidat.reset.password' =>\App\Http\Middleware\CanCandidatResetPasswordMiddleware::class,
     ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

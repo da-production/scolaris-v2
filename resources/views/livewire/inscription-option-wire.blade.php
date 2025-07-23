@@ -20,6 +20,10 @@
                         <label for="can_use_cronjob_candidat">{{ __('Activer les CronJob pour les emails') }} </label>
                         <input wire:model.live="form.can_use_cronjob_candidat" id="can_use_cronjob_candidat" type="checkbox" @checked($form['can_use_cronjob_candidat'] ?? false) />
                     </div>
+                    <div class="p-4 max-w-xl flex gap-2  items-center">
+                        <label for="candidat_login_otp">{{ __('Activer la double auth 2FA') }} </label>
+                        <input wire:model.live="form.candidat_login_otp" id="candidat_login_otp" type="checkbox" @checked($form['candidat_login_otp'] ?? false) />
+                    </div>
                 </div>
 
             </div>

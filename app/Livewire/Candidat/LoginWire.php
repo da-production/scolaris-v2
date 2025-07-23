@@ -2,12 +2,19 @@
 
 namespace App\Livewire\Candidat;
 
+use App\Events\OtpEvent;
 use App\Models\Candidat;
+use App\Models\Option;
+use App\Models\Otp;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Illuminate\Support\Str;
+
 
 #[Layout('components.layouts.guest')]
 class LoginWire extends Component
@@ -23,11 +30,23 @@ class LoginWire extends Component
     public $password;
     public Bool $processing = false;
 
+    public $candidat;
+
+    public $options;
+
     public function mount(){
         /**
          * Todo:
          * 1- check if the app is open in option or not
          */
+        $getOptions = Cache::rememberForever('options_inscription', function(){
+            return Option::where('model_type', 'inscription')->get();
+        });
+        foreach ($getOptions as $option) {
+            $options[$option->name] = $option->value;
+        }
+        $this->options = collect($options);
+        
     }
 
     public function resetRateLimiter()
@@ -73,17 +92,53 @@ class LoginWire extends Component
         ->whereYear('exercice',Date('Y'))
         ->first();
         if(is_null($candidat)){
-            $this->addError('password','Candidat introuvable');
+            $this->addError('password','Identifiants incorrects. Veuillez réessayer.');
             return;
         }
 
         if(Hash::check($this->password,$candidat->password)){
-            Auth::guard('candidat')->login($candidat);        
-            return redirect()->route('candidat.profile');
+            $this->candidat = $candidat;     
         }else{
-            $this->addError('password','crediential wrong');
+            $this->addError('password','Identifiants incorrects. Veuillez réessayer.');
             return;
         }
 
+        if(!is_null($this->options) && $this->options instanceof Collection){
+            if($this->options->get('candidat_login_otp')){
+                $this->loginWithOtp();
+                return;
+            }
+        }
+        $this->loginWithoutOtp();
+    }
+
+    protected function loginWithoutOtp(){
+        /**
+         * 
+         */
+        
+        Auth::guard('candidat')->login($this->candidat);
+        return redirect()->route('candidat.profile');
+    }
+
+    protected function loginWithOtp(){
+        /**
+         * TODO
+         * check if is enabled otp
+         * add the logic
+         * check if the job is enabled
+         */
+        $otp    = random_int(000000,999999);
+        $token  = Str::random(16);
+        Otp::create([
+            'candidat_id'   => $this->candidat->id,
+            'token'     => $token,
+            'code'      => $otp,
+            'remember'  => false
+        ]);
+        
+        // run the job
+        event(new OtpEvent($otp,$token,$this->candidat));
+        return redirect(route('guest.candidat.otp')."?token={$token}");
     }
 }

@@ -6,6 +6,7 @@ use App\Livewire\Candidat\LoginWire;
 use App\Livewire\Candidat\ProfileWire;
 use App\Livewire\Candidat\RegisterWire;
 use App\Livewire\CandidatForgotPasswordWire;
+use App\Livewire\CandidatOtpWire;
 use App\Livewire\CandidatResetPasswordWire;
 use App\Livewire\CandidatsWire;
 use App\Livewire\CandidaturesWire;
@@ -38,10 +39,11 @@ Route::group([
     'as' => 'guest.candidat.',
 ], function () {
     Route::get('candidat/connexion',LoginWire::class)->name('connexion');
+    Route::get('candidat/otp',CandidatOtpWire::class)->name('otp');
     Route::get('inscription',RegisterWire::class)->middleware('can.register')->name('inscription');
 
-    Route::get('candidat/forgot-password', CandidatForgotPasswordWire::class)->name('password.request');
-    Route::get('candidat/reset-password/{token}', CandidatResetPasswordWire::class)->name('password.reset');
+    Route::get('candidat/forgot-password', CandidatForgotPasswordWire::class)->name('password.request')->middleware('can.candidat.reset.password');
+    Route::get('candidat/reset-password/{token}', CandidatResetPasswordWire::class)->name('password.reset')->middleware('can.candidat.reset.password');
 });
 
 Route::group([
