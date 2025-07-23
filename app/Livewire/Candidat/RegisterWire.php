@@ -19,6 +19,7 @@ class RegisterWire extends Component
     public string $rateErrorMessage = '';
     public int $rateTentatives = 0;
     public int $rateDuration = 0;
+    
     // public $nin;
     public $numero_bac;
     public $annee_bac;

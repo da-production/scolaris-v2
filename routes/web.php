@@ -5,6 +5,8 @@ use App\Livewire\Candidat\CandidatureWire;
 use App\Livewire\Candidat\LoginWire;
 use App\Livewire\Candidat\ProfileWire;
 use App\Livewire\Candidat\RegisterWire;
+use App\Livewire\CandidatForgotPasswordWire;
+use App\Livewire\CandidatResetPasswordWire;
 use App\Livewire\CandidatsWire;
 use App\Livewire\CandidaturesWire;
 use App\Livewire\CandidatureWire as LivewireCandidatureWire;
@@ -38,8 +40,8 @@ Route::group([
     Route::get('candidat/connexion',LoginWire::class)->name('connexion');
     Route::get('inscription',RegisterWire::class)->middleware('can.register')->name('inscription');
 
-    // Route::get('candidat/forgot-password', ForgotPassword::class)->name('password.request');
-    // Route::get('candidat/reset-password/{token}', ResetPassword::class)->name('password.reset');
+    Route::get('candidat/forgot-password', CandidatForgotPasswordWire::class)->name('password.request');
+    Route::get('candidat/reset-password/{token}', CandidatResetPasswordWire::class)->name('password.reset');
 });
 
 Route::group([
@@ -93,7 +95,7 @@ Route::prefix('administrateur')
     ->as('options.')
     ->group(function () {
         Route::get('/scolaris', ScolarisOptionWire::class)->name('index')->middleware(['can:update apps options']);
-        Route::get('/inscription', InscriptionOptionWire::class)->name('inscription')->middleware(['can:view apps options']);
+        Route::get('/inscription', InscriptionOptionWire::class)->name('inscription')->middleware(['can:view options']);
         Route::get('/classifications', ClassificationWire::class)->name('classifications')->middleware(['can:view classifications']);
         Route::get('/domains', DomainWire::class)->name('domains')->middleware(['can:view domaines']);
         Route::get('/specialites', SpecialiteWire::class)->name('specialites')->middleware(['can:view specialites']);

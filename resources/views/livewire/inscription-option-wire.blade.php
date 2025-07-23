@@ -10,7 +10,15 @@
                     class="relative flex flex-col w-full text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
                     <div class="p-4 max-w-xl flex gap-2  items-center">
                         <label for="close_register">{{ __('Fermer les inscription') }}</label>
-                        <input wire:model.live="form.close_register" id="close_register" type="checkbox" @checked($form['close_register']) />
+                        <input wire:model.live="form.close_register" id="close_register" type="checkbox" @checked($form[''] ?? false) />
+                    </div>
+                    <div class="p-4 max-w-xl flex gap-2  items-center">
+                        <label for="can_candidat_reset_password">{{ __('Autorizer la réinitialiser du mot de passe') }} </label>
+                        <input wire:model.live="form.can_candidat_reset_password" id="can_candidat_reset_password" type="checkbox" @checked($form['can_candidat_reset_password'] ?? false) />
+                    </div>
+                    <div class="p-4 max-w-xl flex gap-2  items-center">
+                        <label for="can_use_cronjob_candidat">{{ __('Activer les CronJob pour les emails') }} </label>
+                        <input wire:model.live="form.can_use_cronjob_candidat" id="can_use_cronjob_candidat" type="checkbox" @checked($form['can_use_cronjob_candidat'] ?? false) />
                     </div>
                 </div>
 
