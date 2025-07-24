@@ -38,13 +38,12 @@ class ResetPassword extends Component
         $model = new class extends \Illuminate\Database\Eloquent\Model {
             protected $table = 'password_reset_tokens';
         };
-
         $token = $model->where('token', $this->token)->first();
         
         if(is_null($token)) {
             return redirect(route('login'));
         }
-        if($token->created_at->addMinutes(1)->isPast()) {
+        if($token->created_at->addMinutes(15)->isPast()) {
             $model->where('token', $this->token)->delete();
             redirect(route('login'))->with('error', 'Token expired');
         }
@@ -71,16 +70,20 @@ class ResetPassword extends Component
         };
 
         $token = $model->where([
-            ['email', $this->email],
             ['token', $this->token],
         ])->first();
+
+        if($token->email != $this->email) {
+            $this->addError('email',"L’adresse email saisie est invalide ou introuvable. Merci de vérifier vos informations.");
+            return;
+        }
 
         if (is_null($token)) {
             $this->addError('email', __('The provided password reset token is invalid.'));
             return;
         }
 
-        $user = User::where('email', $this->email)->first();
+        $user = User::where('email', $token->email)->first();
 
         if (is_null($user)) {
             $this->addError('email', __('The provided password reset token is invalid.'));

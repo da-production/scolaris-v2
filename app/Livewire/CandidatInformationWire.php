@@ -85,27 +85,7 @@ class CandidatInformationWire extends Component
         }
     }
     public function updated($field, $value){
-        if($field == 'nin' && strlen($value) == 18){
-
-            $response = MiclatApi::GetInformations($value);
-            if(is_null($response)){
-                Log::error('Failed to connect to the API for NIN: ' . $value);
-                $this->addError('nin', __('Échec de la connexion au serveur. Veuillez réessayer plus tard.'));
-                return;
-            }
-            if($response->status() == 200){
-                $data = $response->json();
-                if(isset($data['identite']) && !is_null($data['identite'])){
-                    $this->nom = $data['identite']['nom_f'] ?? '';
-                    $this->prenom = $data['identite']['pren_f'] ?? '';
-                    $this->nom_ar = $data['identite']['nom_a'] ?? '';
-                    $this->prenom_ar = $data['identite']['pren_a'] ?? '';
-                    $this->genre = $data['identite']['sexe'] ?? '';
-                    $this->date_naissance = isset($data['identite']['d_nais']) ? date('Y-m-d', strtotime($data['identite']['d_nais'])) : null;
-                    $this->valide = true;
-                }
-            }
-        }
+        
     }
 
     public function updateProfile(){
