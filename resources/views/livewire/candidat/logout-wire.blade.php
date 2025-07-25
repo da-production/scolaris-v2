@@ -1,6 +1,11 @@
-<button type="button" wire:click="logout" class="bg-white px-3 py-0.5 rounded-lg shadow gap-2 cursor-pointer flex items-center w-full text-[#111418] text-sm font-medium leading-normal" role="menuitem">
+<button type="button" wire:click="logout" class="bg-white dark:bg-neutral-800
+            text-[#111418] dark:text-white
+            px-3 py-0.5 rounded-lg shadow gap-2 
+            cursor-pointer flex items-center w-full 
+            text-sm font-medium leading-normal" role="menuitem">
     <x-icons.sign-out class="size-4 " />
-    Déconnexion
+    <span class="hidden sm:inline">Déconnexion</span>
+    
 </button>
 
 {{-- 
