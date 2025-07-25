@@ -5,9 +5,11 @@
                 <div class="w-full">
                     <h3 class="text-lg flex justify-between items-center font-semibold ml-3 text-slate-800">
                         <div>Gestion des <b>Tâches</b></div>
-                        <flux:button variant="danger" class="flex flex-nowrap items-center gap-1" size="sm" wire:click="flushCache()">
-                            <x-icons.clear width="24" height="24" />
-                            <span>{{ __('Vider le cache') }}</span>
+                        <flux:button variant="danger" class="flex flex-nowrap items-center gap-1" size="sm" wire:click="deleteJobs()">
+                            <div class="flex gap-1 items-center">
+                                <span>{{ __('Supprimer les jobs') }}</span>
+                                <x-icons.clear width="24" height="24" />
+                            </div>
                         </flux:button>
                     </h3>
                     <p class="text-slate-500 mb-5 ml-3"> gérez les Tâches échouées.</p>
@@ -130,8 +132,8 @@
                 
                 <div class="flex justify-end space-x-2">
                     <flux:button variant="filled" wire:click="clear">{{ __('Cancel') }}</flux:button>
-                    <flux:button variant="primary" wire:click="retry('{{ $job->id }}')" >{{ __('Try') }}</flux:button>
-                    <flux:button variant="primary" wire:click="forget('{{ $job->id }}')">{{ __('forget') }}</flux:button>
+                    {{-- <flux:button variant="primary" wire:click="retry('{{ $job->id }}')" >{{ __('Try') }}</flux:button>
+                    <flux:button variant="primary" wire:click="forget('{{ $job->id }}')">{{ __('forget') }}</flux:button> --}}
 
                 </div>
             </form>

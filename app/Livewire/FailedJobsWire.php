@@ -61,4 +61,9 @@ class FailedJobsWire extends Component
             'failedJobs' => $failedJobs,
         ]);
     }
+
+    public function deleteJobs(){
+        DB::table('failed_jobs')->delete();
+        // todo: add success message
+    }
 }
