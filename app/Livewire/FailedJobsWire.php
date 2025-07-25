@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Helpers\JobPayloadParser;
+use App\Support\ExerciceFactory;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -53,6 +54,7 @@ class FailedJobsWire extends Component
 
     public function render()
     {
+        
         $failedJobs = DB::table('failed_jobs')
             ->when($this->search, fn($q) => $q->where('exception', 'like', "%{$this->search}%"))
             ->orderBy('failed_at', 'desc')

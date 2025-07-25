@@ -52,6 +52,7 @@ class CandidatureWire extends Component
                 ->orderBy('name_fr')
                 ->get();
         });
+
         return view('livewire.candidature-wire',compact('motifs'));
     }
 

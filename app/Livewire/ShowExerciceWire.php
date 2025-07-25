@@ -64,6 +64,7 @@ class ShowExerciceWire extends Component
         }
 
         Cache::forget('exercice');
+        Cache::forget('exercices');
 
         /**
          * TODO if the exercice is closed, 

@@ -10,6 +10,7 @@ use App\Models\Domain;
 use App\Models\Filiere;
 use App\Models\Specialite;
 use App\Models\SpecialiteConcour;
+use App\Support\ExerciceFactory;
 use App\Support\OptionsFactory;
 use App\TypeDiplomEnum;
 use Carbon\Carbon;
@@ -142,7 +143,11 @@ class CandidatureWire extends Component
         if($options->get('upload_multiple_files')){
             $documents = Document::where('candidature_id',$this->id)->get();
         }
-        return view('livewire.candidat.candidature-wire', compact('domains','specialiteConcours','classifications','options','documents'));
+
+        
+        $exercices = ExerciceFactory::make('exercices');
+        $ex = $exercices->get(Date('Y'));
+        return view('livewire.candidat.candidature-wire', compact('domains','specialiteConcours','classifications','options','documents','ex'));
     }
 
     public function save(){

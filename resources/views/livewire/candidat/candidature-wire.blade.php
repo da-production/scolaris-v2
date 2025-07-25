@@ -1,5 +1,6 @@
 @use('App\TypeDiplomEnum')
 @use('App\CandidatureStatusEnum')
+@use('Carbon\Carbon')
 
 <div class="w-full">
     <div class="flex flex-wrap">
@@ -119,9 +120,9 @@
 
         <!-- Right Column: 8/12 -->
         <div class="w-full md:w-8/12">
-            @if ($decision != 'EN_ATTENTE')
-                <div class="w-full flex justify-between">
-                    <div class=" border {{ CandidatureStatusEnum::tryFrom($decision)?->color() }} px-4 py-3 rounded relative" role="alert">
+            @if ($decision != 'EN_ATTENTE' && Carbon::parse($ex['displayed_at'] ?? now()->addYear())->isPast())
+                <div class="w-full flex flex-1 justify-between">
+                    <div class=" border {{ CandidatureStatusEnum::tryFrom($decision)?->color() }} px-4 py-3 rounded relative w-full" role="alert">
                         <strong class="font-bold">Resultat !</strong>
                         <span class="block sm:inline">{{ CandidatureStatusEnum::tryFrom($decision)?->description() }}</span>
                     </div>
