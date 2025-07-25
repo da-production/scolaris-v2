@@ -170,7 +170,7 @@ return [
         'log'             => true,  // Logs from Monolog (merged in messages if enabled)
         'db'              => true,  // Show database (PDO) queries and bindings
         'views'           => true,  // Views with their data
-        'route'           => false,  // Current route information
+        'route'           => true,  // Current route information
         'auth'            => false, // Display Laravel authentication status
         'gate'            => true,  // Display Laravel Gate checks
         'session'         => false,  // Display session data
