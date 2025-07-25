@@ -60,7 +60,7 @@ class Candidature extends Model
 
     public function documents()
     {
-        return $this->hasMany(Document::class);
+        return $this->hasMany(Document::class)->where('type','!=','all');
     }
 
     public function document()

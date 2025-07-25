@@ -24,6 +24,14 @@
                         <label for="candidat_login_otp">{{ __('Activer la double auth 2FA') }} </label>
                         <input wire:model.live="form.candidat_login_otp" id="candidat_login_otp" type="checkbox" @checked($form['candidat_login_otp'] ?? false) />
                     </div>
+                    <div class="p-4 max-w-xl flex gap-2  items-center">
+                        <label for="upload_multiple_files">{{ __('Activer le téléversement multiple') }} </label>
+                        <input wire:model.live="form.upload_multiple_files" id="upload_multiple_files" type="checkbox" @checked($form['upload_multiple_files'] ?? false) />
+                    </div>
+                    <div class="p-4 max-w-xl ">
+                        <label for="files_liste_to_upload">{{ __('Tous les fichiers autorisés par diplôme') }} <br><span class="text-gray-600 text-xs"> (Format : diplome1:fichier1|fichier2__diplome2:fichier1|fichier2)</span> </label>
+                        <flux:input wire:model.live.debounce.2000="form.files_liste_to_upload" id="files_liste_to_upload" type="text" class="mt-1" />
+                    </div>
                 </div>
 
             </div>

@@ -10,6 +10,7 @@ use App\Models\Domain;
 use App\Models\Filiere;
 use App\Models\Specialite;
 use App\Models\SpecialiteConcour;
+use App\Support\OptionsFactory;
 use App\TypeDiplomEnum;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -134,7 +135,14 @@ class CandidatureWire extends Component
         $classifications = Cache::rememberForever('classifications', function () {
             return Classification::all();
         });
-        return view('livewire.candidat.candidature-wire', compact('domains','specialiteConcours','classifications'));
+
+        $options = OptionsFactory::make('options_inscription');
+
+        $documents = [];
+        if($options->get('upload_multiple_files')){
+            $documents = Document::where('candidature_id',$this->id)->get();
+        }
+        return view('livewire.candidat.candidature-wire', compact('domains','specialiteConcours','classifications','options','documents'));
     }
 
     public function save(){

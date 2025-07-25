@@ -6,6 +6,7 @@ use App\Events\OtpEvent;
 use App\Models\Candidat;
 use App\Models\Option;
 use App\Models\Otp;
+use App\Support\OptionsFactory;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -32,20 +33,22 @@ class LoginWire extends Component
 
     public $candidat;
 
-    public $options;
+    protected  $options;
 
     public function mount(){
         /**
          * Todo:
          * 1- check if the app is open in option or not
          */
-        $getOptions = Cache::rememberForever('options_inscription', function(){
-            return Option::where('model_type', 'inscription')->get();
-        });
-        foreach ($getOptions as $option) {
-            $options[$option->name] = $option->value;
-        }
-        $this->options = collect($options);
+        // $getOptions = Cache::rememberForever('options_inscription', function(){
+        //     return Option::where('model_type', 'inscription')->get();
+        // });
+        // foreach ($getOptions as $option) {
+        //     $options[$option->name] = $option->value;
+        // }
+        // $this->options = collect($options);
+        $this->options = OptionsFactory::make('options_inscription');
+        
         
     }
 

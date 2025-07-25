@@ -10,48 +10,91 @@
                     <span class="text-gray-500"> Veuillez compléter les informations de la candidature pour pouvoir téléverser le fichier. </span>
                 @else
                     <h2 class="text-lg font-bold mb-4">Téléversement de documents</h2>
+                    {{-- TODO : check if the option is for multiple files or not --}}
+                    @if ($options->get('upload_multiple_files'))
+                        <livewire:multipleupload-files-wire />
+                        @if (count($documents) > 0)
+                            <div class="mb-4">
+                                <h3 class="text-sm font-semibold mb-2">Fichiers déjà téléversés :</h3>
+                                <ul class="list-disc list-inside space-y-1">
+                                    @foreach($documents as $f)
+                                        <!-- Exemple de fichier -->
+                                        <li class="flex items-center justify-between p-4 border rounded-lg shadow-sm bg-white">
+                                            <div class="flex items-center space-x-4">
+                                            <!-- Icône fichier (ex: PDF) -->
+                                            <div class="text-red-500">
+                                                <!-- Icône PDF (heroicons ou autre) -->
+                                                <x-icons.pdf class="size-10" />
+                                            </div>
+
+                                            <div>
+                                                <p class="font-medium text-gray-900">{{ $f->file_name }}</p>
+                                                <p class="text-sm text-gray-500">Type: {{ $f->file_extension }} | Taille: {{ convertSize($f->file_size) }}</p>
+                                            </div>
+                                            </div>
+
+                                            <div class="flex flex-col items-center gap-2">
+                                                <button type="button" wire:click="download('{{ $f->id }}')"
+                                                    class="w-full justify-center flex items-center px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded">
+                                                    Afficher
+                                                </button>
+                                                <button type="button" x-on:click="confirm('Are you sure u want to delete {{ $f->file_name }}') ? @this.call('deleteFile','{{$f->id}}') : null"
+                                                    class="w-full justify-center flex items-center px-3 py-1.5 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded">
+                                                    Supprimer
+                                                </button>
+                                            </div>
+                                        </li>
+
+                                    @endforeach
+                                </ul>
+                            </div>
+                            
+                        @endif
+                    @else
+                        <x-filepond::upload 
+                            wire:model="file"
+                            id="filepond-photo"
+                        />
                     
-                    <x-filepond::upload 
-                        wire:model="file"
-                        id="filepond-photo"
-                    />
-                    @if (count($files) > 0)
-                        <div class="mb-4">
-                            <h3 class="text-sm font-semibold mb-2">Fichiers déjà téléversés :</h3>
-                            <ul class="list-disc list-inside space-y-1">
-                                @foreach($files as $f)
-                                    <!-- Exemple de fichier -->
-                                    <li class="flex items-center justify-between p-4 border rounded-lg shadow-sm bg-white">
-                                        <div class="flex items-center space-x-4">
-                                        <!-- Icône fichier (ex: PDF) -->
-                                        <div class="text-red-500">
-                                            <!-- Icône PDF (heroicons ou autre) -->
-                                            <x-icons.pdf class="size-10" />
-                                        </div>
+                        @if (count($files) > 0)
+                            <div class="mb-4">
+                                <h3 class="text-sm font-semibold mb-2">Fichiers déjà téléversés :</h3>
+                                <ul class="list-disc list-inside space-y-1">
+                                    @foreach($files as $f)
+                                        <!-- Exemple de fichier -->
+                                        <li class="flex items-center justify-between p-4 border rounded-lg shadow-sm bg-white">
+                                            <div class="flex items-center space-x-4">
+                                            <!-- Icône fichier (ex: PDF) -->
+                                            <div class="text-red-500">
+                                                <!-- Icône PDF (heroicons ou autre) -->
+                                                <x-icons.pdf class="size-10" />
+                                            </div>
 
-                                        <div>
-                                            <p class="font-medium text-gray-900">{{ $f->file_name }}</p>
-                                            <p class="text-sm text-gray-500">Type: {{ $f->file_extension }} | Taille: {{ convertSize($f->file_size) }}</p>
-                                        </div>
-                                        </div>
+                                            <div>
+                                                <p class="font-medium text-gray-900">{{ $f->file_name }}</p>
+                                                <p class="text-sm text-gray-500">Type: {{ $f->file_extension }} | Taille: {{ convertSize($f->file_size) }}</p>
+                                            </div>
+                                            </div>
 
-                                        <div class="flex flex-col items-center gap-2">
-                                            <button type="button" wire:click="download('{{ $f->id }}')"
-                                                class="w-full justify-center flex items-center px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded">
-                                                Afficher
-                                            </button>
-                                            <button type="button" x-on:click="confirm('Are you sure u want to delete {{ $f->file_name }}') ? @this.call('deleteFile','{{$f->id}}') : null"
-                                                class="w-full justify-center flex items-center px-3 py-1.5 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded">
-                                                Supprimer
-                                            </button>
-                                        </div>
-                                    </li>
+                                            <div class="flex flex-col items-center gap-2">
+                                                <button type="button" wire:click="download('{{ $f->id }}')"
+                                                    class="w-full justify-center flex items-center px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded">
+                                                    Afficher
+                                                </button>
+                                                <button type="button" x-on:click="confirm('Are you sure u want to delete {{ $f->file_name }}') ? @this.call('deleteFile','{{$f->id}}') : null"
+                                                    class="w-full justify-center flex items-center px-3 py-1.5 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded">
+                                                    Supprimer
+                                                </button>
+                                            </div>
+                                        </li>
 
-                                @endforeach
-                            </ul>
-                        </div>
-                        
+                                    @endforeach
+                                </ul>
+                            </div>
+                            
+                        @endif
                     @endif
+
                     <div class="w-full rounded-xl p-6 space-y-4 border shadow-sm 
                             bg-yellow-50 border-yellow-300 text-yellow-800 
                             dark:bg-yellow-900 dark:border-yellow-600 dark:text-yellow-100">
@@ -62,7 +105,7 @@
 
                     <ul class="list-disc list-inside space-y-1 text-yellow-800 dark:text-yellow-100">
                         <li>Seuls les fichiers au format <strong>PDF</strong> sont acceptés.</li>
-                        <li>La taille maximale autorisée est de <strong>2 Mo</strong> par fichier.</li>
+                        <li>La taille maximale autorisée est de <strong>3 Mo</strong> par fichier.</li>
                         <li>Merci de vérifier la lisibilité et l’orientation de vos documents avant l’envoi.</li>
                     </ul>
 
@@ -77,8 +120,8 @@
         <!-- Right Column: 8/12 -->
         <div class="w-full md:w-8/12">
             @if ($decision != 'EN_ATTENTE')
-                <div class="w-full">
-                    <div class="bg-sky-100 border border-sky-400 text-sky-700 px-4 py-3 rounded relative" role="alert">
+                <div class="w-full flex justify-between">
+                    <div class=" border {{ CandidatureStatusEnum::tryFrom($decision)?->color() }} px-4 py-3 rounded relative" role="alert">
                         <strong class="font-bold">Resultat !</strong>
                         <span class="block sm:inline">{{ CandidatureStatusEnum::tryFrom($decision)?->description() }}</span>
                     </div>
