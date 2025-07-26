@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('recours', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('candidature_id')->constrained('candidatures')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->longText('content')->nullable();
+            $table->string('status')->default('EN_ATTENTE');
             $table->timestamps();
         });
     }

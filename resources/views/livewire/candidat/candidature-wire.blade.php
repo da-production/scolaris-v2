@@ -121,11 +121,12 @@
         <!-- Right Column: 8/12 -->
         <div class="w-full md:w-8/12">
             @if ($decision != 'EN_ATTENTE' && Carbon::parse($ex['displayed_at'] ?? now()->addYear())->isPast())
-                <div class="w-full flex flex-1 justify-between">
-                    <div class=" border {{ CandidatureStatusEnum::tryFrom($decision)?->color() }} px-4 py-3 rounded relative w-full" role="alert">
+                <div class="w-full flex items-center flex-1 justify-between border {{ CandidatureStatusEnum::tryFrom($decision)?->color() }} px-4 py-3 rounded relative w-full">
+                    <div class=" " role="alert">
                         <strong class="font-bold">Resultat !</strong>
                         <span class="block sm:inline">{{ CandidatureStatusEnum::tryFrom($decision)?->description() }}</span>
                     </div>
+                    <livewire:candidat-recours-wire />
                 </div>
             @endif
             <div class=" p-6  bg-white dark:bg-gray-900 shadow-md rounded-lg">

@@ -313,5 +313,6 @@ class CandidatureWire extends Component
 
         return true;
     }
+    
 
 }
