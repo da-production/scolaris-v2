@@ -194,6 +194,7 @@
                                 x-show.transition.in.opacity.duration.600="activeTab === 2">
                                 <ul class="list-disc list-inside space-y-1">
                                     @if (!is_null($candidature->document))
+                                    
                                         <!-- Exemple de fichier -->
                                         <li class="flex items-center justify-between p-4 border rounded-lg shadow-sm bg-white">
                                             <div class="flex items-center space-x-4">
