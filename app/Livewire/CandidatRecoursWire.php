@@ -17,7 +17,7 @@ class CandidatRecoursWire extends Component
     }
 
     public function fetchAll(){
-        $this->recours = Recour::where('candidature_id',auth()->guard('candidat')->user()->candidature->id)->get();
+        $this->recours = Recour::where('candidature_id',auth()->guard('candidat')->user()->candidature?->id)->get();
     }
 
     public function store(){
