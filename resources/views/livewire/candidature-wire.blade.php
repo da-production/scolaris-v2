@@ -57,11 +57,12 @@
                                             @foreach ($motifs as $m)
                                                 <flux:select.option value="{{ $m->id }}">{{ $m->name_fr }}</flux:select.option>
                                             @endforeach
+                                            <flux:select.option value="autre">Autre</flux:select.option>
                                         </flux:select>
                                     @endif
 
-                                    @if ($motif == 5 && $decision == 'REJETE')
-                                        <flux:input wire:model="description" :label="__('Description')" type="text" />
+                                    @if ($motif == "autre" && $decision == 'REJETE')
+                                        <flux:input wire:model="commentaire" :label="__('Description')" type="text" />
                                     @endif
 
                                     <div class="flex justify-end space-x-2">
@@ -194,7 +195,7 @@
                                 x-show.transition.in.opacity.duration.600="activeTab === 2">
                                 <ul class="list-disc list-inside space-y-1">
                                     @if (!is_null($candidature->document))
-                                    
+
                                         <!-- Exemple de fichier -->
                                         <li class="flex items-center justify-between p-4 border rounded-lg shadow-sm bg-white">
                                             <div class="flex items-center space-x-4">

@@ -17,7 +17,6 @@ class MultipleuploadFilesWire extends Component
     public function mount(){
         $options = OptionsFactory::make('options_inscription');
         $files = Option::parseRawStringWithSlugs($options->get('files_liste_to_upload'));
-
         $this->files = $files[strtolower(auth()->guard('candidat')->user()->candidature?->type_diplome)] ?? [];
 
     }

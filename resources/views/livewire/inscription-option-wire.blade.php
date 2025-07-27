@@ -32,6 +32,10 @@
                         <label for="files_liste_to_upload">{{ __('Tous les fichiers autorisés par diplôme') }} <br><span class="text-gray-600 text-xs"> (Format : diplome1:fichier1|fichier2__diplome2:fichier1|fichier2)</span> </label>
                         <flux:input wire:model.live.debounce.2000="form.files_liste_to_upload" id="files_liste_to_upload" type="text" class="mt-1" />
                     </div>
+                    <div class="p-4 max-w-xl ">
+                        <label for="diplomes">{{ __('Diplome') }} <br><span class="text-gray-600 text-xs"> (Format : clé:valeur|clé:valeur) exemple: licence:Licence</span> </label>
+                        <flux:input wire:model.live.debounce.2000="form.diplomes" id="diplomes" type="text" class="mt-1" />
+                    </div>
                 </div>
 
             </div>

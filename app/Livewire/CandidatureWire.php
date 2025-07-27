@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\CandidatureStatusEnum;
 use App\Models\Candidature;
 use App\Models\Document;
+use App\Models\Motif;
 use Exception;
 use Flux\Flux;
 use Illuminate\Support\Facades\Cache;
@@ -19,7 +20,7 @@ class CandidatureWire extends Component
     public $candidature;
     public $decision;
     public $motif;
-    public $description;
+    public $commentaire;
 
     #[Computed]
     public function profilePhotoUrl(): string | null
@@ -30,6 +31,8 @@ class CandidatureWire extends Component
     {
         $this->candidature = $candidature->load('document','candidat', 'classification', 'specialite', 'filiere', 'specialite_concour','domain');
         $this->decision = $this->candidature->decision;
+        $this->motif = !is_null($this->candidature->commentaire) ?? 'autre';
+        $this->commentaire = $this->candidature->commentaire;
     }
 
 
@@ -47,24 +50,35 @@ class CandidatureWire extends Component
 
     public function render()
     {
-        $motifs = Cache::remember('motifs', 60, function () {
-            return \App\Models\Motif::where('is_visible', true)
-                ->orderBy('name_fr')
-                ->get();
-        });
+        $motifs = \App\Models\Motif::where('is_visible', true)
+                ->orderBy('order','ASC')
+                ->get();;
 
         return view('livewire.candidature-wire',compact('motifs'));
     }
 
     public function setDecision(){
-        $validated = $this->validate([
+        $this->validate([
             'decision'          => ['required',new Enum(CandidatureStatusEnum::class)],
-            'motif'             => ['nullable','exists:motifs,id'],
-            'description'       => ['nullable','max:255']
+            'motif'             => ['nullable',function ($attribute, $value, $fail) {
+                                    // Si la valeur est "autre", on l'accepte
+                                    if ($value === 'autre') {
+                                        return;
+                                    }
+
+                                    // Si la valeur n'est pas "autre", on vérifie l'existence dans la table motifs
+                                    $exists = Motif::where('id', $value)->exists();
+
+                                    if (! $exists) {
+                                        $fail("Le champ $attribute doit être un ID valide ou 'autre'.");
+                                    }
+                                }],
+            'commentaire'       => ['nullable','max:255']
         ]);
         try{
             $this->candidature->update([
-                ...$validated,
+                'motif_id' => $this->motif == 'autre' ? null : $this->motif,
+                'commentaire'=> $this->motif == 'autre' ? $this->commentaire : null,
                 'decision' => CandidatureStatusEnum::from($this->decision)->name
             ]);
             Flux::toast('Candidature updated successfully');

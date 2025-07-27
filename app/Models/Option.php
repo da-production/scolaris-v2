@@ -48,4 +48,33 @@ class Option extends Model
         return $result;
     }
 
+    static function diplomes($string): array{
+        // 1. On sépare d'abord la chaîne par le caractère "|" pour obtenir chaque paire clé/valeur
+        $pairs = explode('|', $string);
+
+        // 2. On initialise un tableau associatif vide
+        $result = [];
+
+        // 3. On boucle sur chaque paire pour séparer la clé et la valeur
+        foreach ($pairs as $pair) {
+            // On sépare chaque paire par le caractère ":" (clé et valeur)
+            [$key, $value] = explode(':', $pair, 2);
+
+            // On ajoute la clé et la valeur dans le tableau associatif
+            // Si la clé existe déjà, on peut stocker les valeurs dans un tableau
+            if (isset($result[$key])) {
+                // On s'assure que la valeur existante est bien un tableau
+                if (!is_array($result[$key])) {
+                    $result[$key] = [$result[$key]];
+                }
+                // On ajoute la nouvelle valeur
+                $result[$key][] = $value;
+            } else {
+                $result[$key] = $value;
+            }
+        }
+        return $result;
+
+    }
+
 }

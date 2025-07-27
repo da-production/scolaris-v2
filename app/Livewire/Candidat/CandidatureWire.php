@@ -8,6 +8,7 @@ use App\Models\Classification;
 use App\Models\Document;
 use App\Models\Domain;
 use App\Models\Filiere;
+use App\Models\Option;
 use App\Models\Specialite;
 use App\Models\SpecialiteConcour;
 use App\Support\ExerciceFactory;
@@ -53,10 +54,13 @@ class CandidatureWire extends Component
     public ?string $type_diplome = null;
     public ?string $annee_diplome = null;
     public ?string $etablissement_diplome = null; 
+    public $motif = null;
+    public $description = null;
 
     public $filieres = [];
     public $specialites = [];
     public $enabled = true;
+    public $diplomes = [];
 
     
 
@@ -66,11 +70,12 @@ class CandidatureWire extends Component
          */
         $this->loadInformation();
         $this->loadFiles();
+        $this->diplomesLoad();
     }
 
     #[On('loadInformation')]
     public function loadInformation(){
-        $candidature = Candidature::where('candidat_id',auth()->guard('candidat')->user()->id)->latest()->first();
+        $candidature = Candidature::with('motif')->where('candidat_id',auth()->guard('candidat')->user()->id)->latest()->first();
         if($candidature){
             $this->id = $candidature->id;
             $this->candidat_id = $candidature->candidat_id;
@@ -89,6 +94,7 @@ class CandidatureWire extends Component
             $this->type_diplome = $candidature->type_diplome;
             $this->annee_diplome = $candidature->annee_diplome;
             $this->etablissement_diplome = $candidature->etablissement_diplome; 
+            $this->motif = $candidature->motif;
 
             $this->filieres = Filiere::where('domain_id',$candidature->domain_id)->get();
             $this->specialites = Specialite::where('filiere_id',$candidature->filiere_id)
@@ -127,6 +133,13 @@ class CandidatureWire extends Component
         }
         $this->saveFile();
     }
+
+    public function diplomesLoad()
+    {
+        $options = OptionsFactory::make('options_inscription');
+        $this->diplomes = Option::diplomes($options->get('diplomes'));
+    }
+
     public function render()
     {
         $domains = Cache::rememberForever('domains', function () {
@@ -157,6 +170,10 @@ class CandidatureWire extends Component
         }else{
             $this->enabled = true;
         }
+        if($this->decision != 'EN_ATTENTE'){
+            $this->enabled = false;
+            session()->flash('error', 'Vous ne pouvez pas soumettre une candidature avec une décision deja prise.');
+        }
         return view('livewire.candidat.candidature-wire', compact('domains','specialiteConcours','classifications','options','documents','ex'));
     }
 
@@ -181,7 +198,8 @@ class CandidatureWire extends Component
             'classification_id' => ['required', 'exists:classifications,id'],
             'moyenne_semestres' => ['required', 'numeric', 'min:0', 'max:20'],
             'moyenne_bac' => ['nullable', 'numeric', 'min:0', 'max:20'],
-            'type_diplome' => ['nullable', 'string',Rule::in(array_column(TypeDiplomEnum::cases(), 'value')),],
+            'type_diplome' => ['nullable', 'string',Rule::in(array_keys($this->diplomes)),],
+            // 'type_diplome' => ['nullable', 'string',Rule::in(array_column(TypeDiplomEnum::cases(), 'value')),],
             'annee_diplome' => ['nullable', 'integer', 'max:' . date('Y')],
             'etablissement_diplome' => ['nullable', 'string']
         ]);
@@ -197,6 +215,13 @@ class CandidatureWire extends Component
                 'annnee_bac' => $this->annnee_bac,
                 'decision' => 'EN_ATTENTE',
             ]);
+            $classification = Classification::where("id",$this->classification_id)->pluck('moyen')->first();
+            $coefficient_spec = Specialite::where("id",$this->specialite_id)->pluck('coefficient')->first();
+            $moyenne = calculateAverage($classification, $coefficient_spec, $candidature->moyenne_semestres);
+            $candidature->update([
+                'moyenne' => $moyenne,
+            ]);
+
             $this->id = $candidature->id;
             $this->dispatch('$refresh');
             session()->flash('success', 'Candidature enregistrée avec succès.');

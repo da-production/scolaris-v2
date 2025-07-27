@@ -129,13 +129,19 @@
 
         <!-- Right Column: 8/12 -->
         <div class="w-full md:w-8/12">
-            @if ($decision != 'EN_ATTENTE' && Carbon::parse($ex['displayed_at'] ?? now()->addYear())->isPast())
+            @if (!is_null($decision) && $decision != 'EN_ATTENTE' && Carbon::parse($ex['displayed_at'] ?? now()->addYear())->isPast())
                 <div class="w-full flex items-center flex-1 justify-between border {{ CandidatureStatusEnum::tryFrom($decision)?->color() }} px-4 py-3 rounded relative w-full">
                     <div class=" " role="alert">
                         <strong class="font-bold">Resultat !</strong>
                         <span class="block sm:inline">{{ CandidatureStatusEnum::tryFrom($decision)?->description() }}</span>
+                        @if ($decision == 'REJETE')
+                            <span class="font-bold">({{ is_null($motif) ? $commentaire : $motif->name_fr }})</span>
+                        @endif
                     </div>
-                    <livewire:candidat-recours-wire />
+                    @if ($decision == 'REJETE')
+                        <livewire:candidat-recours-wire />
+                    @endif
+                    
                 </div>
             @endif
             <div class=" p-6  bg-white dark:bg-gray-900 shadow-md rounded-lg">
@@ -198,8 +204,8 @@
                     <div>
                         <flux:select id="type_diplome" wire:model.change="type_diplome" >
                             <option value="">-- type diplome --</option>
-                            @foreach(TypeDiplomEnum::cases() as $type)
-                                <option value="{{ $type->value }}">{{ $type->name }}</option>
+                            @foreach($diplomes as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
                             @endforeach
                         </flux:select>
                     </div>

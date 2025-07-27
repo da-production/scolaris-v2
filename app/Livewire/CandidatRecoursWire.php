@@ -26,7 +26,7 @@ class CandidatRecoursWire extends Component
             return;
         }
         $this->validate([
-            'content' => 'required|min:10[max:5000',
+            'content' => 'required|min:10|max:5000',
         ]);
 
         Recour::create([

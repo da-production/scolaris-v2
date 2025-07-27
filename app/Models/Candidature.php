@@ -33,6 +33,11 @@ class Candidature extends Model
         'classification_concour',
     ];
 
+    public function motif()
+    {
+        return $this->belongsTo(Motif::class);
+    }
+
     public function domain(){
         return $this->belongsTo(Domain::class);
     }

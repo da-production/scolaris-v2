@@ -71,10 +71,9 @@
                                         </td>
                                         <td class="p-4 border-b border-slate-200">
                                             <div class="flex justify-end text-sm text-slate-800">
-                                                <flux:modal.trigger name="display-recour">
-                                                    <flux:button variant="primary" size="sm" x-data="" x-on:click.prevent="$dispatch('open-modal', 'display-recour')">
-                                                        <x-icons.plus-circle width="24" height="24" />
-                                                    {{ __('Détail') }}
+                                                <flux:modal.trigger>
+                                                    <flux:button variant="primary" size="sm" wire:click="openModal({{ $recour->id }})" >
+                                                        {{ __('Détail') }}
                                                     </flux:button>
                                                 </flux:modal.trigger>
                                                 
@@ -95,36 +94,102 @@
         </div>
     </div>
 
-    <flux:modal name="display-recour" :show="$errors->isNotEmpty()" focusable class="max-w-xl w-full">
-        <form wire:submit="save" class="space-y-6">
-            <div>
-                <flux:heading size="lg">{{ __('Ajouter une specialite') }}</flux:heading>
+    <flux:modal name="display-recour" :show="$errors->isNotEmpty()" focusable class="max-w-7xl w-full space-y-6">
+        <flux:heading size="lg">Detail</flux:heading>
+        <hr />
+        <div class="grid grid-cols-2  gap-4">
 
+            <div
+                class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-800 dark:text-gray-100">
+                <div>
+                    <span class="font-semibold">Nom (FR):</span> {{ $recour->candidature->candidat->nom }}
+                </div>
+                <div>
+                    <span class="font-semibold">Prénom (FR):</span> {{ $recour->candidature->candidat->prenom }}
+                </div>
+                <div>
+                    <span class="font-semibold">Domain:</span> {{ $recour->candidature->domain->name_fr }}
+                </div>
+                <div>
+                    <span class="font-semibold">Filiere:</span> {{ $recour->candidature->filiere->name_fr }}
+                </div>
+                <div>
+                    <span class="font-semibold">Specialite:</span> {{ $recour->candidature->specialite->name_fr }}
+                </div>
+                <div>
+                    <span class="font-semibold">Specialite Choise:</span> {{ $recour->candidature->specialite_concour->name_fr }}
+                </div>
+                <div>
+                    <span class="font-semibold">Classification :</span>
+                    {{ $recour->candidature->classification->code }}
+                </div>
+                <div>
+                </div>
+                <div>
+                    <span class="font-semibold">Moyenne semestres:</span> {{ $recour->candidature->moyenne_semestres }}
+                </div>
+                <div>
+                    <span class="font-semibold">moyenne:</span> {{ $recour->candidature->moyenne }}
+                </div>
+                <div>
+                    <span class="font-semibold">Type diplome:</span> {{ $recour->candidature->type_diplome }}
+                </div>
+                <div>
+                    <span class="font-semibold">Annee diplome:</span> {{ $recour->candidature->annee_diplome }}
+                </div>
+                <div class="col-span-2">
+                    <span class="font-semibold">Etablissement diplome:</span> {{ $recour->candidature->etablissement_diplome }}
+                </div>
             </div>
-            <flux:select wire:model="filiere_id" placeholder="filieres">
-                <flux:select.option>Filieres</flux:select.option>
-                @foreach ($filieres as $filiere)
-                    <flux:select.option value="{{ $filiere->id }}">{{ $filiere->name_fr }}</flux:select.option>
+            <form wire:submit="save" class="space-y-6 col-span-1">
+
+                @foreach ($candidatureRecours as $r)
+                    <div class=" rounded-xl bg-gray-{{ is_null($r->user_id) ? '100' : '200' }} text-gray-700 py-2 px-4 flex flex-col gap-2" style="text-align: {{ is_null($r->user_id) ? 'left' : 'right' }}">
+
+                        <p class="relative">
+                            {{ $r->content }}
+                            
+                        </p>
+                        <p class="flex gap-1 text-xs text-gray-500 {{ is_null($r->user_id) ? 'justify-start' : 'justify-end' }}"> 
+                            <x-icons.calendar width="14" height="14" />
+                            {{ $r->created_at }}
+                            @if (is_null($r->user_id))
+                                <span> | </span>
+                                {{ $r->status->label() }} 
+                                @if ($r->status->name != "EN_ATTENTE")
+                                <span></span>
+                                le : 
+                                {{ $r->updated_at }}
+                                
+                                @endif
+                                <div class="flex justify-end">
+                                    <x-dropdown trigger="Action" size="sm" >
+                                        <button wire:click="setStatus('APPROUVE')" class="cursor-pointer rounded-md block text-left w-full px-4 py-2 hover:bg-gray-100">Approuvé</button>
+                                        <button wire:click="setStatus('REJETE')" class="cursor-pointer rounded-md block text-left w-full px-4 py-2 hover:bg-gray-100">Rejeté</button>
+                                    </x-dropdown>
+                                </div>
+                            @endif
+                        </p>
+                    </div>
                 @endforeach
-            </flux:select>
-            </flux:select>
-            <flux:input wire:model="name_fr" :label="__('Lebelle FR')" type="text" />
-            <flux:input wire:model="name_ar" :label="__('Lebelle AR')" type="text" />
-            <flux:input wire:model="coefficient" :label="__('coefficient')" type="text" />
-            <div class="p-4 max-w-xl flex gap-2  items-center">
-                <label for="is_active">{{ __('Activer') }}</label>
-                <input wire:model="is_active" id="is_active" type="checkbox" />
-            </div>
-            
-            <div class="flex justify-end space-x-2">
-                <flux:button variant="filled" wire:click="clearForm">{{ __('Cancel') }}</flux:button>
-                @if (is_null($id))
-                    <flux:button variant="primary" type="submit">{{ __('Create') }}</flux:button>
-                @else
-                    <flux:button variant="primary" type="submit">{{ __('update') }}</flux:button>
-                @endif
-            </div>
-        </form>
+                <textarea wire:model="content" class="w-full outline-0 ring-0 border border-gray-200 rounded-lg p-2 text-gray-700 text-sm" rows="4"></textarea>
+                @error('content')
+                    <span class="text-xs text-red-500">{{ $message }}</span>
+                @enderror
+                <div class="flex justify-end space-x-2">
+
+                    <flux:button variant="filled" size="sm" wire:click="clearForm">{{ __('Annuler') }}</flux:button>
+                    <flux:button variant="primary" size="sm" type="submit">{{ __('Envoye') }}</flux:button>
+                    <a target="_blank" href="{{ route('administrateur.candidats.candidature.detail', $recour->candidature->id) }}">
+                        <flux:button variant="primary" size="sm" type="button">
+                            Afficher la candidature
+                        </flux:button>
+                    </a>
+                </div>
+                
+            </form>
+        </div>
+
     </flux:modal>
 
 

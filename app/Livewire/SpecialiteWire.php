@@ -50,6 +50,7 @@ class SpecialiteWire extends Component
     private function store(){
         $validate = $this->validate([
             'filiere_id' => 'required|exists:filieres,id',
+            'specialite_concour_id' => 'required|exists:specialite_concours,id',
             'name_fr' => 'required',
             'name_ar' => 'nullable',
             'coefficient' => 'nullable|numeric',

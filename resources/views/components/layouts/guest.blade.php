@@ -5,7 +5,15 @@
         {!! ToastMagic::styles() !!}
     </head>
     <body class="min-h-screen bg-white antialiased dark:bg-linear-to-b dark:from-neutral-950 dark:to-neutral-900 bg__gradient">
-        <div class="bg-background flex min-h-svh flex-col  gap-6 p-6 md:p-10">
+        <div class="max-w-[85rem] w-full mx-auto flex justify-end">
+            <flux:radio.group x-data variant="segmented" x-model="$flux.appearance" class=" scale-75 -mr-10">
+                <flux:radio value="light" icon="sun">{{ __('Clair') }}</flux:radio>
+                <flux:radio value="dark" icon="moon">{{ __('Sombre') }}</flux:radio>
+                <flux:radio value="system" icon="computer-desktop">{{ __('Système') }}</flux:radio>
+            </flux:radio.group>
+        </div>
+        
+        <div class="bg-background flex min-h-svh flex-col  gap-6 px-6 md:px-10 md:py-2">
             <div class="max-w-[85rem] w-full mx-auto bg-white dark:bg-gray-900 rounded-2xl flex flex-wrap justify-center items-center gap-5 p-4">
                 
                 {{-- Logo MTESS --}}

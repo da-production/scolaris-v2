@@ -11,8 +11,20 @@
                 <flux:heading size="lg">{{ __('Recour') }}</flux:heading>
 
             </div>
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 rounded">
+                <div class="flex">
+                    
+                    <p class="text-sm text-yellow-700">
+                    ⚠ Vous ne pouvez envoyer <strong>qu’un seul recours</strong>.
+                    </p>
+                </div>
+            </div>
+
                 @if (count($recours) == 0)            
                     <textarea wire:model="content" class="w-full outline-0 ring-0 border border-gray-200 rounded-lg p-2 text-gray-700 text-sm" rows="4"></textarea>
+                    @error('content')
+                        <span class="text-xs text-red-500">{{ $message }}</span>
+                    @enderror
                 @endif
                 @foreach ($recours as $recour)
                     <div class="my-5 rounded-xl bg-gray-{{ is_null($recour->user_id) ? '100' : '200' }} text-gray-700 py-2 px-4 flex flex-col gap-2" style="text-align: {{ is_null($recour->user_id) ? 'left' : 'right' }}">
