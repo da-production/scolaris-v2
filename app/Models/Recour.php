@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\CandidatureStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class Recour extends Model
@@ -19,4 +20,9 @@ class Recour extends Model
     {
         return $this->belongsTo(User::class); 
     }
+
+    protected $casts = [
+        'status' => CandidatureStatusEnum::class,
+        'created_at' => 'datetime'
+    ];
 }

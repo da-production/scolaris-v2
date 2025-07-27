@@ -2,15 +2,11 @@
 
 namespace App\Providers;
 
-use App\Models\Exercice;
-use App\Models\Option;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\View;
 use Opcodes\LogViewer\Facades\LogViewer;
 
 class AppServiceProvider extends ServiceProvider
@@ -51,15 +47,7 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasAnyRole($roles) || $user->hasAnyPermission($permissions);
         });
 
-        $options = Cache::rememberForever('options',function(){
-            return Option::all();
-        });
-        $options->get('app_name', 'Scolaris');
-        $exercice = Cache::rememberForever('exercice', function () {
-            return Exercice::where('annee', now()->year)->first();
-        });
-        View::share('options', $options);
-        View::share('exercice', $exercice);
+        
         try {
             DB::connection()->getPDO();
             

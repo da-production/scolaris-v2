@@ -16,6 +16,7 @@ return [
     
     'name' => env('APP_NAME', 'Laravel'),
 
+    'otp' => env('OTP', false),
     'otp_cronjob'   => env('OTP_CRONJOB',false),
     'cronjob'   => env('CRONJOB',false),
 

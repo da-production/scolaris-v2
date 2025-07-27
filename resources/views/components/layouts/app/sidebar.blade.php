@@ -33,6 +33,12 @@
                             {{ __('Candidatures') }}
                         </div>
                     </flux:navlist.item>
+                    <flux:navlist.item :href="route('administrateur.candidats.recours')" :current="request()->routeIs('administrateur.candidats.recours')" wire:navigate>
+                        <div class="flex items-center gap-2">
+                            <x-icons.message class="w-5 h-5" />
+                            {{ __('Recours') }}
+                        </div>
+                    </flux:navlist.item>
                 </flux:navlist.group>
 
                 <flux:navlist.group :heading="__('Candidatures par specialite')" class="grid">

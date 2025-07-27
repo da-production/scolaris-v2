@@ -10,10 +10,13 @@
                 @if (is_null($id))
                     <span class="text-gray-500"> Veuillez compléter les informations de la candidature pour pouvoir téléverser le fichier. </span>
                 @else
-                    <h2 class="text-lg font-bold mb-4">Téléversement de documents</h2>
                     {{-- TODO : check if the option is for multiple files or not --}}
                     @if ($options->get('upload_multiple_files'))
-                        <livewire:multipleupload-files-wire />
+                        @if ($enabled)
+                            <h2 class="text-lg font-bold mb-4">Téléversement de documents</h2>
+
+                            <livewire:multipleupload-files-wire />
+                        @endif
                         @if (count($documents) > 0)
                             <div class="mb-4">
                                 <h3 class="text-sm font-semibold mb-2">Fichiers déjà téléversés :</h3>
@@ -39,10 +42,12 @@
                                                     class="w-full justify-center flex items-center px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded">
                                                     Afficher
                                                 </button>
+                                                @if ($enabled)
                                                 <button type="button" x-on:click="confirm('Are you sure u want to delete {{ $f->file_name }}') ? @this.call('deleteFile','{{$f->id}}') : null"
                                                     class="w-full justify-center flex items-center px-3 py-1.5 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded">
                                                     Supprimer
                                                 </button>
+                                                @endif
                                             </div>
                                         </li>
 
@@ -52,6 +57,8 @@
                             
                         @endif
                     @else
+                        <h2 class="text-lg font-bold mb-4">Téléversement de documents</h2>
+
                         <x-filepond::upload 
                             wire:model="file"
                             id="filepond-photo"
@@ -82,10 +89,12 @@
                                                     class="w-full justify-center flex items-center px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded">
                                                     Afficher
                                                 </button>
+                                                @if($enabled)
                                                 <button type="button" x-on:click="confirm('Are you sure u want to delete {{ $f->file_name }}') ? @this.call('deleteFile','{{$f->id}}') : null"
                                                     class="w-full justify-center flex items-center px-3 py-1.5 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded">
                                                     Supprimer
                                                 </button>
+                                                @endif
                                             </div>
                                         </li>
 
@@ -214,11 +223,13 @@
                     @endif
 
                     {{-- Submit --}}
-                    <div class="md:col-span-2 text-right">
-                        <flux:button type="submit" variant="primary" class="" >
-                            {{ __('Enregistrer') }}
-                        </flux:button>
-                    </div>
+                    @if ($enabled)
+                        <div class="md:col-span-2 text-right">
+                            <flux:button type="submit" variant="primary" class="" >
+                                {{ __('Enregistrer') }}
+                            </flux:button>
+                        </div>
+                    @endif
                 </form>
             </div>
         </div>

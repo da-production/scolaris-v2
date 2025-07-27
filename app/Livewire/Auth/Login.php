@@ -53,9 +53,12 @@ class Login extends Component
 
         $this->ensureIsNotRateLimited();
 
-        return $this->LoginWithOtp();
+        if(config('app.otp')){
+            return $this->LoginWithOtp();
+        }else{
+            return $this->LoginWithoutOtp();
+        }
 
-        return $this->LoginWithoutOtp();
     }
     protected function LoginWithOtp(){
         $user = User::where('email',$this->email)->first();

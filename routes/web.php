@@ -21,6 +21,7 @@ use App\Livewire\FiliereWire;
 use App\Livewire\HomeWire;
 use App\Livewire\InscriptionOptionWire;
 use App\Livewire\MotifWire;
+use App\Livewire\RecoursListeWire;
 use App\Livewire\ScolarisOptionWire;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
@@ -91,6 +92,7 @@ Route::prefix('administrateur')
         Route::get('/candidatures',CandidaturesWire::class)->name('candidatures')->middleware(['can:view all candidatures']);
         Route::get('/candidatures/{candidature}',LivewireCandidatureWire::class)->name('candidature.detail')->middleware(['can:view candidature']);
         Route::get('/candidatures/specialite/{specialite_concour_id}',CandidaturesWire::class)->name('candidatures.specialite')->middleware(['hasAnyPermission:view all candidatures, view candidatures']);
+        Route::get('/recours', RecoursListeWire::class)->name('recours')->middleware(['can:view recours']);
     });
     // options resources
     Route::prefix('options')

@@ -56,6 +56,8 @@ class CandidatureWire extends Component
 
     public $filieres = [];
     public $specialites = [];
+    public $enabled = true;
+
     
 
     public function mount(){
@@ -147,6 +149,14 @@ class CandidatureWire extends Component
         
         $exercices = ExerciceFactory::make('exercices');
         $ex = $exercices->get(Date('Y'));
+        if(!$ex['is_closed']){
+            if(Carbon::parse($ex['closed_at'])->isPast()){
+                $this->enabled = false;
+                session()->flash('error', 'Le délai de mise à jour des informations est dépassé. Vous ne pouvez plus mettre à jour vos informations pour l\'exercice en cours.');
+            }
+        }else{
+            $this->enabled = true;
+        }
         return view('livewire.candidat.candidature-wire', compact('domains','specialiteConcours','classifications','options','documents','ex'));
     }
 
