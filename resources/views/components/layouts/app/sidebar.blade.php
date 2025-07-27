@@ -70,8 +70,11 @@
                 <flux:navlist.group :heading="__('Settings')" class="grid">
                     <livewire:connected-user-wire />
                     @canany(['view options'])
-                        <flux:navlist.item icon="users" :current="Str::contains(Route::currentRouteName(), 'administrateur.options')" href="{{ route('administrateur.options.index') }}">
-                            {{ __('Options') }}
+                        <flux:navlist.item :current="Str::contains(Route::currentRouteName(), 'administrateur.options')" href="{{ route('administrateur.options.index') }}">
+                            <div class="flex gap-2 items-center">
+                                <x-icons.duo-apps class="size-5" />
+                                <span>{{ __('Options') }}</span>
+                            </div>
                         </flux:navlist.item>
                     @endcanany
                     <flux:navlist.item icon="users" :current="Str::contains(Route::currentRouteName(), 'administrateur.utilisateurs')" href="{{ route('administrateur.utilisateurs.index') }}">

@@ -41,10 +41,10 @@ class ShowExerciceWire extends Component
 
     public function update(){
         $this->validate([
-            'opened_at'    => new IsYear($this->exercice->annee),
-            'closed_at'    => new IsYear($this->exercice->annee),
-            'closed_trait' => new IsYear($this->exercice->annee),
-            'displayed_at' => new IsYear($this->exercice->annee),
+            'opened_at'    => ['date',new IsYear($this->exercice->annee)],
+            'closed_at'    => ['date',new IsYear($this->exercice->annee)],
+            'closed_trait' => ['date',new IsYear($this->exercice->annee)],
+            'displayed_at' => ['date',new IsYear($this->exercice->annee)],
             'conditions'   => 'nullable',
             'note'         => 'nullable',
             'is_closed'    => 'nullable|boolean',

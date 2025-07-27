@@ -2,7 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Models\Candidature;
 use App\Models\Exercice;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 
 class CreateExerciseWire extends Component
@@ -54,6 +56,13 @@ class CreateExerciseWire extends Component
             ->update([
                 'is_closed' => true
             ]);
+
+            Candidature::where('exercice','!=', $exercice->annee)
+            ->update([
+                'decision' => 'NON_CLASSE',
+            ]);
+
+            Cache::forget('exercices');
             // Reset the form
             $this->reset();
             // Optionally, you can redirect or show a success message

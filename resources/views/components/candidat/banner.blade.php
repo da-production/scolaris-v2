@@ -10,8 +10,8 @@
         class="bg-blue-600 bg-[url('https://preline.co/assets/svg/examples/abstract-1.svg')] bg-no-repeat bg-cover bg-center p-4 rounded-lg text-center">
         <div class="flex flex-wrap justify-center items-center gap-2">
             <div class="flex gap-4 items-center justify-center text-xs">
-                <p class="inline-block text-white"><span class="underline">Date d'ouverture:</span> {{ $exercice->opened_at }}</p>
-                <p class="inline-block text-white"><span class="underline">Date clôture:</span> {{ $exercice->closed_trait }}</p>
+                <p class="inline-block text-white"><span class="underline">Date d'ouverture:</span> {{ $exercice?->opened_at }}</p>
+                <p class="inline-block text-white"><span class="underline">Date clôture:</span> {{ $exercice?->closed_trait }}</p>
                 {{-- <p class="inline-block text-white"><span class="underline">Date d'affichage de resultat:</span> 2025-01-01</p> --}}
                 
             </div>

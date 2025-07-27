@@ -39,12 +39,19 @@
                         <span>{{ __('Classifications') }}</span>
                     </div>
                 </flux:navlist.item>
-                <flux:navlist.item :href="route('administrateur.options.domains')" 
+                <flux:navlist.item 
+                :href="route('administrateur.options.domains')" 
                 @class([
                     'active' => request()->routeIs('administrateur.options.domains'),
                 ])
                 wire:navigate>
-                    <div class="flex gap-2 items-center">
+                    <div class="flex gap-2 items-center 
+                        after:content-['1'] after:absolute after:left-[-1rem] after:top-1/2 after:-translate-y-1/2
+                    after:bg-teal-500 after:text-white after:text-xs after:w-6 after:h-6 after:rounded-full
+                        after:flex after:items-center after:justify-center after:shadow-md after:z-10
+                    before:content-[''] before:absolute before:-left-1 before:top-2/2 before:-translate-y-1/2
+                    before:h-5 before:w-[2px] before:bg-gray-400
+                    ">
                         <x-icons.roles class="size-4" />
                         <span>{{ __('Domains') }}</span>
                     </div>
@@ -54,19 +61,15 @@
                     'active' => request()->routeIs('administrateur.options.filieres'),
                 ])
                 wire:navigate>
-                    <div class="flex gap-2 items-center">
+                    <div class="flex gap-2 items-center
+                    after:content-['2'] after:absolute after:left-[-1rem] after:top-1/2 after:-translate-y-1/2
+                    after:bg-teal-500 after:text-white after:text-xs after:w-6 after:h-6 after:rounded-full
+                        after:flex after:items-center after:justify-center after:shadow-md after:z-10
+                    before:content-[''] before:absolute before:-left-1 before:top-2/2 before:-translate-y-1/2
+                    before:h-5 before:w-[2px] before:bg-gray-400
+                    ">
                         <x-icons.roles class="size-4" />
                         <span>{{ __('Filieres') }}</span>
-                    </div>
-                </flux:navlist.item>
-                <flux:navlist.item :href="route('administrateur.options.specialites')" 
-                @class([
-                    'active' => request()->routeIs('administrateur.options.specialites'),
-                ])
-                wire:navigate>
-                    <div class="flex gap-2 items-center">
-                        <x-icons.roles class="size-4" />
-                        <span>{{ __('Spécialité') }}</span>
                     </div>
                 </flux:navlist.item>
 
@@ -75,9 +78,30 @@
                     'active' => request()->routeIs('administrateur.options.specialites.concours'),
                 ])
                 wire:navigate>
-                    <div class="flex gap-2 items-center">
+                    <div class="flex gap-2 items-center
+                    after:content-['3'] after:absolute after:left-[-1rem] after:top-1/2 after:-translate-y-1/2
+                    after:bg-teal-500 after:text-white after:text-xs after:w-6 after:h-6 after:rounded-full
+                        after:flex after:items-center after:justify-center after:shadow-md after:z-10
+                    before:content-[''] before:absolute before:-left-1 before:top-2/2 before:-translate-y-1/2
+                    before:h-5 before:w-[2px] before:bg-gray-400
+                    ">
                         <x-icons.roles class="size-4" />
                         <span>{{ __('Spécialité concours') }}</span>
+                    </div>
+                </flux:navlist.item>
+
+                <flux:navlist.item :href="route('administrateur.options.specialites')" 
+                @class([
+                    'active' => request()->routeIs('administrateur.options.specialites'),
+                ])
+                wire:navigate>
+                    <div class="flex gap-2 items-center
+                    after:content-['4'] after:absolute after:left-[-1rem] after:top-1/2 after:-translate-y-1/2
+                    after:bg-teal-500 after:text-white after:text-xs after:w-6 after:h-6 after:rounded-full
+                        after:flex after:items-center after:justify-center after:shadow-md after:z-10
+                    ">
+                        <x-icons.roles class="size-4" />
+                        <span>{{ __('spécialités apparentée ') }}</span>
                     </div>
                 </flux:navlist.item>
                 

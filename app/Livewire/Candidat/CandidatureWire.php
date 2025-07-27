@@ -162,7 +162,7 @@ class CandidatureWire extends Component
         
         $exercices = ExerciceFactory::make('exercices');
         $ex = $exercices->get(Date('Y'));
-        if(!$ex['is_closed']){
+        if(!is_null($ex) && !$ex['is_closed']){
             if(Carbon::parse($ex['closed_at'])->isPast()){
                 $this->enabled = false;
                 session()->flash('error', 'Le délai de mise à jour des informations est dépassé. Vous ne pouvez plus mettre à jour vos informations pour l\'exercice en cours.');
