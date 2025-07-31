@@ -168,7 +168,7 @@
                             </tbody>
                         </table>
                     </div>
-                    @if (!$bySpecialite)
+                    @if (!$bySpecialite && !$rejete)
                         <div class="my-5 mx-4">
                             {{ $candidatures->links() }}
                         </div>
@@ -181,6 +181,17 @@
                 class="absolute z-0 inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
         </div>
     </div>
+<!-- Floating Export Button -->
+    <button
+    wire:click="exportExcelFile"
+    class="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-all duration-300"
+    aria-label="Export"
+    >
+    <!-- Icon (download) - You can replace this with any SVG or icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+    </svg>
+    </button>
 
 
 </x-layouts.candidat>

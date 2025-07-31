@@ -87,4 +87,6 @@ class CandidatureWire extends Component
             Log::error($e->getMessage());
         }
     }
+
+   
 }

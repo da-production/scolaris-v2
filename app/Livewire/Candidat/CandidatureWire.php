@@ -75,7 +75,9 @@ class CandidatureWire extends Component
 
     #[On('loadInformation')]
     public function loadInformation(){
-        $candidature = Candidature::with('motif')->where('candidat_id',auth()->guard('candidat')->user()->id)->latest()->first();
+        $candidature = Cache::remember('candidature_'.auth()->guard('candidat')->user()->id, 60 * 60 , function () {
+            return Candidature::with('motif')->where('candidat_id',auth()->guard('candidat')->user()->id)->latest()->first();
+        });
         if($candidature){
             $this->id = $candidature->id;
             $this->candidat_id = $candidature->candidat_id;
@@ -187,6 +189,7 @@ class CandidatureWire extends Component
         }else{
             $this->update();
         }
+        Cache::forget('candidature_'.auth()->guard('candidat')->user()->id);
     }
 
     private function validateData(){

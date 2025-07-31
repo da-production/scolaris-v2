@@ -10,6 +10,8 @@ use App\Models\Specialite;
 use App\Models\SpecialiteConcour;
 use Illuminate\Validation\Rules\Enum;
 use Livewire\Component;
+use Rap2hpoutre\FastExcel\FastExcel;
+
 
 class CandidaturesWire extends Component
 {
@@ -23,6 +25,7 @@ class CandidaturesWire extends Component
     public $prenom;
     public $orderBy;
     public $orderDirection= 'DESC';
+    public $candidatures = [];
 
     public $specialite;
     public $bySpecialite = false;
@@ -128,15 +131,37 @@ class CandidaturesWire extends Component
         })
         ->where('exercice',auth()->user()->exercice)
         ->with('candidat');
-        if($this->bySpecialite) {
+        if($this->bySpecialite && !$this->rejete) {
             $query->when($this->specialite_concour_id, function ($query) {
                 $query->where('specialite_concour_id', $this->specialite_concour_id);
             });
-            $candidatures = $query->limit(100)->get();
+            $candidatures = $query->whereIn('decision',['EN_ATTENTE','APPROUVE']);
+            $candidatures = $query
+            ->orderBy('classification_concour','ASC')
+            ->orderBy('moyenne','DESC')
+            ->limit(100)->get();
         }else{
             $candidatures = $query->paginate(15);
         }
+        $this->candidatures= $candidatures;
+        return view('livewire.candidatures-wire');
+    }
+
+    public function exportExcelFile(){
+        $candidatures = Candidature::where([
+            ['exercice', auth()->user()->exercice],
+            ['decision', 'ACCEPTE']
+        ])
+        ->with('candidat')
+        ->orderBy('moyenne', 'DESC')
+        ->limit(100)
+        ->get();
+        return (new FastExcel($candidatures))->download('candidature.xlsx', function ($candidature) {
+            return [
+                'Nom complet' => optional($candidature->candidat)->nom . ' ' . optional($candidature->candidat)->prenom,
+                'Adresse email' => optional($candidature->candidat)->email,
+            ];
+        });
         
-        return view('livewire.candidatures-wire',compact('candidatures'));
     }
 }

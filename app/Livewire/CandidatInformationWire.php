@@ -63,7 +63,10 @@ class CandidatInformationWire extends Component
 
     public function loadCandidatInformation()
     {
-        $candidat = auth()->guard('candidat')->user()->load(['wilaya']);
+        $candidat = Cache::remember('candidat_'.auth()->guard('candidat')->user()->id, 60 * 60, function () {
+            return auth()->guard('candidat')->user()->load(['wilaya']);
+        });
+        
         if($candidat){
             $this->candidat = $candidat;
             $this->nin = $candidat->nin;
@@ -113,7 +116,7 @@ class CandidatInformationWire extends Component
             ...$validate,
             'valide' => $this->valide,
         ]);
-
+        Cache::forget('candidat_'.auth()->guard('candidat')->user()->id);
         session()->flash('success', __('Profile updated successfully.'));
     }
 }
