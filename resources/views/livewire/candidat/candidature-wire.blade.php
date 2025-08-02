@@ -156,6 +156,9 @@
                                 <option value="{{ $domain->id }}">{{ $domain->name_fr }} - {{ $domain->name_ar }}</option>
                             @endforeach
                         </flux:select>
+                        @error('domain_id')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     {{-- Filière --}}

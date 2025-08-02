@@ -34,7 +34,7 @@ class CandidatureFactory extends Factory
             'commentaire' => $this->faker->paragraph(),
             'moyenne_semestres' => $this->faker->randomFloat(2, 0, 20),  // Random average between 0 and 20
             'moyenne' => $this->faker->randomFloat(2, 0, 20),  // Random average between 0 and 20
-            'decision' => $this->faker->randomElement(['EN_ATTENTE', 'ACCEPTE', 'REFUSE']),  // Random decision
+            'decision' => $this->faker->randomElement(['EN_ATTENTE', 'APPROUVE', 'REJETE']),  // Random decision
             'exercice' => $this->faker->year(),
             'numero_bac' => $this->faker->unique()->numerify('BAC######'),  // Random unique BAC number
             'annnee_bac' => $this->faker->year(),

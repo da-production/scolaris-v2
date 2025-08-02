@@ -1,3 +1,4 @@
+@use('App\CandidatureStatusEnum')
 <x-layouts.candidat>
     
     <div class="flex w-full flex-1 flex-col gap-4 rounded-xl">
@@ -139,8 +140,8 @@
                                             </p>
                                         </td>
                                         <td class="p-4 border-b border-slate-200">
-                                            <p class="block text-sm text-slate-800">
-                                                {{ $candidature->decision}}
+                                            <p class="block text-xs ">
+                                                <span class="border px-4 py-1 rounded-md {{ CandidatureStatusEnum::from($candidature->decision)->color() }}">{{ CandidatureStatusEnum::from($candidature->decision)->label() }}</span>
                                             </p>
                                         </td>
                                         <td class="p-4 border-b border-slate-200">
@@ -181,17 +182,18 @@
                 class="absolute z-0 inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
         </div>
     </div>
-<!-- Floating Export Button -->
-    <button
-    wire:click="exportExcelFile"
-    class="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-all duration-300"
-    aria-label="Export"
-    >
-    <!-- Icon (download) - You can replace this with any SVG or icon -->
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
-    </svg>
-    </button>
+    @if ($bySpecialite)
+        <button
+            wire:click="exportExcelFile"
+            class="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-all duration-300"
+            aria-label="Export"
+            >
+            <!-- Icon (download) - You can replace this with any SVG or icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+            </svg>
+        </button>
+    @endif
 
 
 </x-layouts.candidat>

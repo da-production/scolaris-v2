@@ -122,10 +122,12 @@
                                         <span class="font-semibold">Specialite Choise:</span> {{ $candidature->specialite_concour->name_fr }}
                                     </div>
                                     <div>
-                                        <span class="font-semibold">Classification :</span>
+                                        <span class="font-semibold">Classification de l'universite:</span>
                                         {{ $candidature->classification->code }}
                                     </div>
                                     <div>
+                                        <span class="font-semibold">Classification de l'ecole:</span>
+                                        {{ $candidature->classification_concour }}
                                     </div>
                                     <div>
                                         <span class="font-semibold">Moyenne semestres:</span> {{ $candidature->moyenne_semestres }}

@@ -214,15 +214,19 @@ class CandidatureWire extends Component
                 ...$validate,
                 'exercice' => now()->year,
                 'candidat_id' => auth()->guard('candidat')->user()->id,
-                'numero_bac' => $this->numero_bac,
-                'annnee_bac' => $this->annnee_bac,
+                'numero_bac' => auth()->guard('candidat')->user()->numero_bac,
+                'annnee_bac' => auth()->guard('candidat')->user()->annnee_bac,
                 'decision' => 'EN_ATTENTE',
             ]);
             $classification = Classification::where("id",$this->classification_id)->pluck('moyen')->first();
             $coefficient_spec = Specialite::where("id",$this->specialite_id)->pluck('coefficient')->first();
             $moyenne = calculateAverage($classification, $coefficient_spec, $candidature->moyenne_semestres);
+            $classification_consour = Classification::where('moyen', '<=', $moyenne)
+                                                    ->orderByDesc('moyen')
+                                                    ->first();
             $candidature->update([
                 'moyenne' => $moyenne,
+                'classification_concour' => $classification_consour->code ?? null,
             ]);
 
             $this->id = $candidature->id;
@@ -242,13 +246,17 @@ class CandidatureWire extends Component
             $coefficient_spec = Specialite::where("id",$this->specialite_id)->pluck('coefficient')->first();
 
             $moyenne = calculateAverage($classification, $coefficient_spec, $this->moyenne_semestres);
+            $classification_consour = Classification::where('moyen', '<=', $moyenne)
+                                                    ->orderByDesc('moyen')
+                                                    ->first();
             Candidature::find($this->id)->update([
                 ...$validate,
                 'exercice'      => now()->year,
-                'numero_bac'    => $this->numero_bac,
-                'annnee_bac'    => $this->annnee_bac,
+                'numero_bac'    => auth()->guard('candidat')->user()->numero_bac,
+                'annnee_bac'    => auth()->guard('candidat')->user()->annnee_bac,
                 'decision'      => 'EN_ATTENTE',
                 'moyenne'       => $moyenne,
+                'classification_concour' => $classification_consour->code ?? null,
             ]);
         }catch(\Exception $e){
             Log::error('Error while saving candidature: '.$e->getMessage());

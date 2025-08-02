@@ -25,7 +25,6 @@ class CandidaturesWire extends Component
     public $prenom;
     public $orderBy;
     public $orderDirection= 'DESC';
-    public $candidatures = [];
 
     public $specialite;
     public $bySpecialite = false;
@@ -143,25 +142,78 @@ class CandidaturesWire extends Component
         }else{
             $candidatures = $query->paginate(15);
         }
-        $this->candidatures= $candidatures;
-        return view('livewire.candidatures-wire');
+        return view('livewire.candidatures-wire', compact('candidatures'));
+    }
+
+    private function candidaturesGenerator() {
+        foreach (Candidature::cursor() as $candidature) {
+            yield $candidature->load('candidat');
+        }
+    }
+
+    private function processCandidatures() {
+    return Candidature::with('candidat')
+            ->orderBy('moyenne', 'DESC')
+            ->chunk(100, function ($candidatures) {
+                foreach ($candidatures as $candidature) {
+                    // $candidature->candidat déjà chargé
+                }
+            });
     }
 
     public function exportExcelFile(){
-        $candidatures = Candidature::where([
-            ['exercice', auth()->user()->exercice],
-            ['decision', 'ACCEPTE']
-        ])
-        ->with('candidat')
-        ->orderBy('moyenne', 'DESC')
-        ->limit(100)
-        ->get();
-        return (new FastExcel($candidatures))->download('candidature.xlsx', function ($candidature) {
-            return [
-                'Nom complet' => optional($candidature->candidat)->nom . ' ' . optional($candidature->candidat)->prenom,
-                'Adresse email' => optional($candidature->candidat)->email,
-            ];
-        });
+        if($this->bySpecialite){
+            $candidatures = Candidature::where([
+                ['exercice', auth()->user()->exercice],
+                ['decision', 'ACCEPTE']
+            ])
+            ->with('candidat')
+            ->orderBy('moyenne', 'DESC')
+            ->get();
+            $today = str($candidatures[0]->specialite_concour->name_fr)->slug() . "-" . now()->format('Y-m-d_H:i:s');
+            return (new FastExcel($candidatures))->download("candidatures-{$today}.xlsx", function ($candidature) {
+                return [
+                    'exercice' => $candidature->exercice,
+                    'Candidat ID' => $candidature->candidat_id,
+                    'Candidature ID' => $candidature->id,
+                    'NIN' => optional($candidature->candidat)->nin,
+                    'Nom complet' => optional($candidature->candidat)->nom . ' ' . optional($candidature->candidat)->prenom,
+                    'Nom complet' => optional($candidature->candidat)->nom . ' ' . optional($candidature->candidat)->prenom,
+                    'Adresse email' => optional($candidature->candidat)->email,
+                    'Date de Naissance' => optional($candidature->candidat)->date_naissance,
+                    'Lieu de Naissance' => optional($candidature->candidat)->lieu_naissance,
+                    'adresse' => optional($candidature->candidat)->adresse,
+                    'wilaya' => optional($candidature->wilaya)->name_fr,
+                    'Telephone' => optional($candidature->candidat)->mobile_1 . " / " . optional($candidature->candidat)->mobile_2,
+                    'domain' => optional($candidature->domain)->name_fr,
+                    'filiere' => optional($candidature->filiere)->name_fr,
+                    'specialite apparentée' => optional($candidature->specialite)->name_fr,
+                    'specialite choisis' => optional($candidature->specialite_concour)->name_fr,
+                    'moyenne' => $candidature->moyenne,
+                    'moyenne semestres' => $candidature->moyenne_semestres,
+                    'numero_bac' => $candidature->numero_bac,
+                    'annee_bac' => $candidature->annnee_bac,
+                    'moyenne_bac' => $candidature->moyenne_bac,
+                    'type_diplome' => $candidature->type_diplome,
+                    'annee_diplome' => $candidature->annee_diplome,
+                    'etablissement_diplome' => $candidature->etablissement_diplome,
+                    'classification du concour' => $candidature->classification_concour,
+                    'classification du l\'universite' => $candidature->classification->code ?? 'N/A',
+                    'decision' => $candidature->decision,
+                    'motif de reje' => optional($candidature->motif)->name,
+                    'commentaire' => $candidature->commentaire,
+                    
+                ];
+            });
+        }else{
+            return (new FastExcel($this->candidaturesGenerator()))->download('candidatures.xlsx', function ($candidature) {
+                return [
+                    'Nom complet' => optional($candidature->candidat)->nom . ' ' . optional($candidature->candidat)->prenom,
+                    'Adresse email' => optional($candidature->candidat)->email,
+                ];
+            });
+        }
+        
         
     }
 }
